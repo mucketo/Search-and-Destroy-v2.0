@@ -2624,7 +2624,7 @@
 							"cancelmousedown", 
 							eventHandler, 
 							tooltipText,  -- tooltip text
-							miniwin.cursor_hand, 0)  -- hand cursor
+							miniwin.cursor_arrow, 0)  -- hand cursor
 		end
 	end
 
