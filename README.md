@@ -11,6 +11,8 @@ The beta is therefore finished and v2.0.0 is officially live.  The main feature 
  
  - The window command buttons now 'light up' when clicked, which doesn't make anything happen faster, but I like how it looks.  The window plugin was always the last in line as far as getting updates because everything in it depended on the other two plugins, so its code will be getting a much-needed overhaul.
  
+ - The GUI window also displays the cp level taken.  Red border means you can't take a cp at your current level, green border means you can.
+ 
 It's a short list, but hopefully the differences are apparent.  If you encounter a problem, let me know.  Thanks for all of your support, reports, and advice that helped make the version 2 release successful in all respects!
 
 # Search and Destroy v2.0 beta — 11 Aug 2018
