@@ -1,10 +1,10 @@
 # Search and Destroy v2.0.0 instruction manual
----
 
-"xcp" targets a campaign mob.  If area cp, also runs to area and does hunt trick. 
- - 'xcp' targets the first available cp mob (i.e. living and location known)
- - 'xcp <number>' targets a specific mob, dead or alive.
- - 'xcp mode <ht|qw|off>' makes "xcp" do hunt trick, quick where, or nothing upon running to an area.
+## To search for a cp target, use "xcp"
+ - 'xcp' targets the first available cp mob (i.e. living and location known) on your list.
+   'xcp <number>' targets a specific mob, dead or alive.
+   'xcp mode <ht|qw|off>' makes "xcp" do hunt trick, quick where, or nothing upon running to an area.
+ 
  - Unknown location (i.e. room not mapped) mobs can't be targeted, because S&D needs the area or room id to find them.
  - When you target a cp mob, it will be highlighted in the GUI window.
 ---
