@@ -1,6 +1,6 @@
 # Search and Destroy v2.0.0 instruction manual
 
-## "xcp" command:
+### "xcp" command:
    **xcp** targets the first available cp mob (i.e. living and location known) on your list.  
    **xcp** *n*.**mob** targets the *n*th mob on your list, dead or alive.
    **xcp mode ht|qw|off' makes "xcp" do hunt trick, quick where, or nothing upon running to an area.
