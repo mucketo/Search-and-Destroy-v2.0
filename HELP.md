@@ -1,4 +1,5 @@
 # Search and Destroy v2.0.0 instruction manual
+---
 
 "xcp" targets a campaign mob.  If area cp, also runs to area and does hunt trick. 
  - 'xcp' targets the first available cp mob (i.e. living and location known)
