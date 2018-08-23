@@ -5,7 +5,7 @@
 - **xcp** \<*n*.**mob**\> targets the *n*th mob on your list, dead or alive.
 - **xcp mode \[ht\|qw\|off\]** makes "xcp" do hunt trick, quick where, or nothing after running to an area, while on an area cp.
 - Hunt trick works well in most cases, but in others (e.g. 62.princess) it can take while.  Where only one instance exists, quick-where can be faster.
-- Unknown mobs can't be targeted.  "Unknown" means that your mapper db is missing the relevant data.  In area cp's, it means you haven't explored that area at all, so you need to use "xrunto" or Aardwolf's "runto" command to get run there.  In room cp's it means the room name wasn't found in your mapper db — most likely because the target area isn't fully explored.
+- Unknown mobs can't be targeted because the location hasn't been explored and therefore is missing from your mapper db.  In area cp's, it means you haven't explored the area at all, so you need to use "xrunto" or Aardwolf's "runto" command to run there.  In room cp's it means the room name wasn't found in your mapper db because the area containing it isn't fully explored.  Looking up a map for that area may be helpful.
 
 ### "goto" command — run to room within area after getting search results
 - **go** runs to first room returned by hunt trick / quick where.
