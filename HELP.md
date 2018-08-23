@@ -1,20 +1,21 @@
 # Search and Destroy v2.0.0 instruction manual
 
 ### "xcp" command - target a mob on your 'cp check' list and get location
-- **xcp** targets the first available cp mob (i.e. living and location known) on your list.  
-- **xcp** \<*n*\> targets the *n*th mob on your list, dead or alive.
-- **xcp 0** clears the current target and its room search results.
-- **xcp mode** \[**ht**\|**qw**\|**off**\] makes "xcp" do hunt trick, quick where, or nothing after running to an area, while on an area cp.
-- Hunt trick works well in most cases, but can be slow (e.g. 62.princess).  Where mob is unique (only 1 instance), hunt trick isn't needed, so quick-where by itself can be faster if your cp gives you multiple unique targets.
-- Unknown mobs can't be targeted because the location hasn't been explored and therefore is missing from your mapper db.  In area cp's, it means you haven't explored the area at all, so you need to use "xrunto" or Aardwolf's "runto" command to run there.  In room cp's it means the room name wasn't found in your mapper db because the area containing it isn't fully explored.  Looking up a map for that area may be helpful.
+- '**xcp**' targets the first available mob on your cp list and gets possible locations. "Available" means living and location is known.  E.g. the first four mobs on your list are all dead, unknown, and/or both, "xcp" will ignore all of those and target the 5th mob.
+- '**xcp** \<*n*\>' targets the *n*th target on your cp list, dead or alive.  If dead, the MUD only ever gives the area name, even if the cp is room.
+- '**xcp 0** clears the current target and its room search results.
+- '**xcp mode** \<**ht**\|**qw**\|**off**\>' a.  do hunt trick, quick where, or nothing after running to an area (area cp's only).  
+- For area cp's, "xcp" first runs to target area.  Upon arrival, it does hunt trick to pick out your cp mob, then does quick-where to find and display the room(s).  If the area has multiple rooms with that name, your mob could be in any of them, so check each in turn until you find and kill your target.
+- For room cp's, "xcp" runs to the
+- Unknown mobs can't be targeted because the location isn't in your mapper db.  For area cp's, this means you've never been to the area at all.  For room cp's it means you haven't mapped any rooms with that name in any area — in most of these cases you'll have been to the area before, but haven't explored (i.e. mapped) every room.
 
 ### "goto" command — run to room within area after getting search results
 - '**go**' runs to first room on the list returned by hunt trick / quick where.
 - '**go**' \<*n*\> runs to the *n*th room on the list.
 - '**go 0**' runs to the area start room (see 'xset mark')
  
-### "nx" (next) and "nx-" (back) commands — run to next room in list of results
-- '**nx**' runs you to the next room in the list of results, after doing 'go'
+### "nx" and "nx-" commands — run to next or previous room in list of results
+- '**nx**' runs to the next room in the list of results, after doing 'go'
 - '**nx-**' runs to previous room.
 - If you don't use 'go' first, 'nx' and 'nx-' will both run to the first room on the list (same as 'go')
 
