@@ -1,7 +1,7 @@
 # Search and Destroy v2.0.0 — 19 Aug 2018
 Good morning, it's time once again to turn the thermostat of awesome up a notch and so here we are.  Thanks to everyone for reporting issues with the beta and helping me find the root cause of those problems.  At this point the issues arising from the three-plugin system are basically gone.  Most of these came down to lots of duplicate (triplicate, really) code, issues with plugin broadcast and response, and issues when a change to one plugin breaks the others (which I must then fix).  The merge went a lot smoother than I expected and the number of problem reports dropped off fast as things were fixed.
 
-The beta is therefore finished and v2.0.0 is officially live.  The main feature is the merge itself rather than any actual new things:
+The beta is therefore finished and v2.0.0 is officially live.  The main feature is the merge itself rather than any actual new things, but there are some other improvements as well:
 
  - Removing the plugin-broadcast system fixed all of the data sync issues and having to track a lot of changes across all three files.
  
@@ -9,6 +9,8 @@ The beta is therefore finished and v2.0.0 is officially live.  The main feature 
  
  - Everything in one file makes changes and whatnot much more predictable, avoiding problems and saving time.
  
+ - At SH, the messages about being able to take a new campaign are different from when you are levelling.  This was overlooked in the original and I didn't catch it because I very seldom sit SH.  These messages should now be tracked correctly.  At SH auto-noexp is probably undesirable so you'd probably turn it off via 'xset noexp 0'.  This is now unnecessary – when you reach 200/201 noexp will be toggled off until you remort.  Your TNL set point remains unchanged and auto-noexp is technically still on, it is simply ignored while you are 200/SH.  You can still toggle noexp manually if you need to.
+  
  - The window command buttons now 'light up' when clicked, which doesn't make anything happen faster, but I like how it looks.  The window plugin was always the last in line as far as getting updates because everything in it depended on the other two plugins, so its code will be getting a much-needed overhaul.
  
  - The GUI window also displays the cp level taken.  Red border means you can't take a cp at your current level, green border means you can.
