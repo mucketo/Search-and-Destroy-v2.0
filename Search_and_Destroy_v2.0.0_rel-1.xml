@@ -45,7 +45,7 @@
 	require "tprint"
 	require "wait"
 
-	local current_sd_version = "Search & Destroy v2.0.0 (rel-1)"
+	local current_sd_version = "Search & Destroy v2.0.0 (rel-1.1)"
 	local plugin_id_gmcp_handler = "3e7dedbe37e44942dd46d264"		-- easier to remember the var names than the plugin id's
 	local plugin_id_gmcp_mapper = "b6eae87ccedd84f510b74714"
 	local plugin_id_z_order = "462b665ecb569efbf261422f"
@@ -59,7 +59,7 @@
 -- player status, cp eligibility, etc.
 	local char_state = "1"		
 	local player_on_cp = "no"
-	local new_cp_current_level = "yes"
+	local cpstatus_can_I_get_new_cp = "no"
 -- Execute in area
 	local execute_in_area_array = {}
 -- quest details
@@ -929,6 +929,24 @@
 		xcp_retry_stat = 0
 	end
 
+	function cp_check_yes_can_get_new_cp()	-- from cp check
+		cpstatus_can_I_get_new_cp = "yes"
+		print("cp check yes can get new cp")
+		noexp_can_get_new_cp()
+		--xgui_RefreshWindow()
+	end
+	
+	function cp_check_no_cant_get_new_cp()	-- from cp check
+		cpstatus_can_I_get_new_cp = "no"
+		print("cp check no cant get new cp")
+		noexp_cannot_get_new_cp()
+		--xgui_RefreshWindow()
+	end	
+
+	function can_I_currently_get_new_cp()	-- return boolean
+		return (cpstatus_can_I_get_new_cp == "yes") and true or false
+	end
+	
 	local sql_build_area_target =
 		--	" SELECT '' as roomid, '' as roomName, uid as arid, name as areaName, 'area' as type, '' as info " ..
 			" SELECT uid as arid, name as areaName " ..
@@ -1779,22 +1797,21 @@
 
 --	********** Auto noexp functions **********
 	function xset_noexp_tnl(name, line, wildcards)		-- called by alias: "xset noexp" when argument given
-		if (wildcards.arg == "") then
+		local set_tnl = wildcards.arg or "-1"
+		if (wildcards.arg == "-1") then
 			if (auto_noexp_tnl == 0) then
 				ColourNote("#FF5000", "", "Search and Destroy: Auto 'noexp' is currently OFF.")
 			else
 				ColourNote("#FF5000", "", "Search and Destroy: Auto 'noexp' is ON and set to " .. auto_noexp_tnl .. " TNL.\n")
 			end
 		elseif (wildcards.arg == "off") or (wildcards.arg == "0") then	-- "xset noexp off" and "xset noexp 0" turn auto-noexp off.
-			EnableTrigger("trg_cp_check_noexp", false)
 			EnableTrigger("trg_mobkill_awards_xp", false)
 			auto_noexp_tnl = 0
 			SetVariable("mcvar_auto_noexp_tnl", auto_noexp_tnl)
 			ColourNote("#FF5000", "", "\nSearch and Destroy: Auto 'noexp' is now OFF.\n")
 		else											-- xset with any other (positive) number turns auto-noexp on.
-			EnableTrigger("trg_cp_check_noexp", true)
 			EnableTrigger("trg_mobkill_awards_xp", true)
-			auto_noexp_tnl = tonumber(wildcards.arg)
+			auto_noexp_tnl = tonumber(set_tnl)
 			SetVariable("mcvar_auto_noexp_tnl", auto_noexp_tnl)
 			ColourNote("#FF5000", "", "\nSearch and Destroy: Auto 'noexp' now set to " .. auto_noexp_tnl .. " TNL.\n")
 		end
@@ -1808,20 +1825,44 @@
 		print("noexp onoff: " .. noexp_onoff)
 	end
 	
-	function cp_check_noexp()		-- called by line 'You may take campaign this level.' in 'cp check'
-		new_cp_current_level = "yes"
+	function noexp_can_get_new_cp()		-- called by line 'You may take campaign this level.' in 'cp check'
 		if (auto_noexp_tnl > 0) then	-- if auto_noexp_tnl is greater than zero, then auto-noexp is on.
-			local tnl = tonumber(gmcp("char.status.tnl"))
-			if (tnl < auto_noexp_tnl) and (noexp_onoff == "off") then		-- tnl less than set point and noexp is off --> turn that shit on
-				set_noexp("on")
-				ColourNote("#FF5000", "", "\nSearch and Destroy: Turning 'noexp' ON (Your TNL is less than " .. auto_noexp_tnl .. ")")
-			elseif (tnl > auto_noexp_tnl) and (noexp_onoff == "on") then	-- if over min TNL and noexp is on --> turn noexp off regardless
-				set_noexp("off")
-				ColourNote("#FF5000", "", "\nSearch and Destroy: Turning 'noexp' OFF (your TNL is greater than " .. auto_noexp_tnl .. ")")
+			local plevel = tonumber(gmcp("char.status.level"))
+			if (plevel < 200) then
+				local tnl = tonumber(gmcp("char.status.tnl"))
+				if (tnl < auto_noexp_tnl) and (noexp_onoff == "off") then		-- tnl less than set point and noexp is off --> turn that shit on
+					set_noexp("on")
+					ColourNote("#FF5000", "", "\nSearch and Destroy: Turning 'noexp' ON (Your TNL is less than " .. auto_noexp_tnl .. ")")
+				elseif (tnl > auto_noexp_tnl) and (noexp_onoff == "on") then	-- if over min TNL and noexp is on --> turn noexp off regardless
+					set_noexp("off")
+					ColourNote("#FF5000", "", "\nSearch and Destroy: Turning 'noexp' OFF (your TNL is greater than " .. auto_noexp_tnl .. ")")
+				end
+			else
+				if (noexp_onoff == "on") then
+					set_noexp("off")
+					ColourNote("#FF5000", "#000000", "Search and Destroy: Turning noexp OFF (you have reached level ".. plevel ..")")
+				end
 			end
 		else 	-- feature is turned off, just show reminder
-			auto_noexp_tnl = 0
+			auto_noexp_tnl = 0	-- set to 0 if somehow negative
 			ColourNote("#FF5000", "#000000", "Automatic 'noexp' is currently turned OFF.\n")
+		end
+	end
+
+	function noexp_cannot_get_new_cp()	-- called by trigger:  You must level to get a new campaign
+		if (auto_noexp_tnl > 0) then
+			local plevel = tonumber(gmcp("char.status.level"))
+			if (plevel < 200) then	
+				if (noexp_onoff == "on") and (player_on_cp == "yes") then			
+					ColourNote("#FF5000", "#000000", "Search and Destroy: Turning noexp OFF (must level to get new cp)")
+					set_noexp("off")
+				end
+			else
+				if (noexp_onoff == "on") then
+					set_noexp("off")
+					ColourNote("#FF5000", "#000000", "Search and Destroy: Turning noexp OFF (you have reached level ".. plevel ..")")
+				end
+			end
 		end
 	end
 	
@@ -1833,8 +1874,8 @@
 
 	function check_current_tnl(name, line, wildcards)	-- called via timer set by function mobkill_awards_xp
 		local tnl = tonumber(gmcp("char.status.tnl"))
-		--print("check current tnl: " .. tnl .. "   new cp this level: " .. new_cp_current_level)
-		if (new_cp_current_level == "yes") then
+		--print("check current tnl: " .. tnl .. "   new cp this level: " .. cpstatus_can_I_get_new_cp)
+		if (cpstatus_can_I_get_new_cp == "yes") then
 			if (tnl < auto_noexp_tnl) then
 				if (noexp_onoff == "off") then
 					set_noexp("on")
@@ -1855,31 +1896,20 @@
 	end
 	
 	function noexp_raise_level()	-- called when player raises a level
-		new_cp_current_level = "yes"
+		cpstatus_can_I_get_new_cp = "yes"
 		xgui_RefreshWindow()
 	end
 	
 	function player_start_new_cp()	-- called by line "good luck on your campaign" when starting new cp
 		player_on_cp = "yes"
-		new_cp_current_level = "no"
+		cpstatus_can_I_get_new_cp = "no"
 		if (noexp_onoff == "on") and (auto_noexp_tnl > 0) then
 			ColourNote("#FF5000", "#000000", "Search and Destroy: Turning 'noexp' OFF (you have started a new CP)")
 			set_noexp("off")
 		end
-		--Send_GMCP_Packet("request room")
+		Send_GMCP_Packet("request room")
 		Execute("cp info")
 		DoAfterSpecial(1.0, "cp ch", sendto.execute)
-		xgui_RefreshWindow()
-	end
-
-	function new_cp_must_level()	-- called by trigger:  You must level to get a new campaign
-		new_cp_current_level = "no"
-		if (auto_noexp_tnl > 0) then
-			if (noexp_onoff == "on") and (player_on_cp == "yes") then			
-				ColourNote("#FF5000", "#000000", "Search and Destroy: Turning noexp OFF (can't take new CP at current level)")
-				set_noexp("off")
-			end
-		end
 		xgui_RefreshWindow()
 	end
 	
@@ -1894,7 +1924,6 @@
 		EnableTrigger("trg_cp_check_line", false)
 		EnableTrigger("trg_cp_check_end", false)
 		EnableTrigger("trg_campaign_type", false)
-		EnableTrigger("trg_cp_check_noexp", true)
 		cp_type = "none"
 		cp_info_level = "0"
 		cp_target_list = {}
@@ -2458,13 +2487,13 @@
 		local tdy = 3
 		local tx1,tx2,ty1,ty2 = (left+tdx), (left+width-tdy), (top+tdy), (top+height-tdy)	-- x and y values for text location
 		local bgcolor = 0x000000
-		local c1y = 0x40D000	-- green shade		color_1 = (new_cp_current_level == "yes") and c1y or c1n
+		local c1y = 0x40D000	-- green shade		color_1 = (cpstatus_can_I_get_new_cp == "yes") and c1y or c1n
 		local c2y = 0x207800
 		local c1n = 0x0010E0	-- red shade
 		local c2n = 0x000880
-		local c3 = (cp_type ~= "none") and 0x80FFFF or 0x0020FF		-- text (yellow)
-		local color_1 = (new_cp_current_level == "yes") and c1y or c1n
-		local color_2 = (new_cp_current_level == "yes") and c2y or c2n
+		local c3 = (cp_type ~= "none") and 0x80FFFF or 0x0020FF		-- text (yellow) 
+		local color_1 = (cpstatus_can_I_get_new_cp == "yes") and c1y or c1n
+		local color_2 = (cpstatus_can_I_get_new_cp == "yes") and c2y or c2n
 	
 		WindowRectOp(win, 2, x1, y1, x2, y2, bgcolor)												-- Draw background and set color (black)
 		WindowRectOp (win, 4, x1, y1, x2, y2, color_1, color_2)											-- Draw button border (left/top = light grey, right/bottom = darker grey)
@@ -2476,7 +2505,7 @@
 		--		"" .. (hint or text), miniwin.cursor_hand, 0)											-- Tooltip text, cursor shape (hand)
 		--end
 	end	
-	
+
 	function xgui_ClearWindow()
 		draw_window()
 		add_resize_tag()
@@ -2624,7 +2653,7 @@
 							"cancelmousedown", 
 							eventHandler, 
 							tooltipText,  -- tooltip text
-							miniwin.cursor_arrow, 0)  -- hand cursor
+							miniwin.cursor_arrow, 0)
 		end
 	end
 
@@ -2977,9 +3006,9 @@
 		enabled="y"	regexp="y" sequence="100" send_to="12" > </trigger>
 
 	<trigger name="trg_player_is_on_cp"
-		match="^You have (?:(?:\d+ day(?:s)?, )?\d+ hour(?:s)? and )?\d+ minute(?:s)? left to finish this campaign\.$"
+		match="^You have (?:(?:\d+ days?, )?\d+ hours? and )?\d+ minutes? left to finish this campaign\.$"
 		script="player_is_on_cp"
-		enabled="y" regexp="y" sequence="100" keep_evaluating="y" send_to="12" > </trigger>
+		enabled="y" regexp="y" sequence="100" keep_evaluating="y" send_to="12" > <send>print("ok")</send> </trigger>
 		
 	<trigger name="trg_cp_check_scrambled_gag" group="trg_campaign"
 		match="^Note\: One or more target names in this campaign might be slightly scrambled\.$"
@@ -3070,16 +3099,22 @@
 		script="player_not_on_cp"
 		name="sd_trg_cp_complete"
 		enabled="y" regexp="n" sequence="100" keep_evaluating="y"> </trigger>
+
+	<trigger match="^You (?:may take a campaign at this level|may take another campaign)\.$"
+		script="cp_check_yes_can_get_new_cp"
+		enabled="y" regexp="y" sequence="100" keep_evaluating="y" > </trigger>
+
+	<trigger match="^You (?:will have to level before you can go on another campaign|cannot take another campaign for (?:(?:\d+ hours?, )?\d+ minutes? and )?\d+ seconds?)\.$"
+		script="cp_check_no_cant_get_new_cp"
+		enabled="y" regexp="y" sequence="100" keep_evaluating="y" > </trigger>
 	
 	<!-- HUNT TRICK -->
-	<trigger
-		match="^You are (?:almost )?certain that .+ is (?:north|south|east|west|up|down) from here\.|You are confident that .+ passed through here, heading (?:north|south|east|west|up|down)\.|The trail of .+ is confusing, but you're reasonably sure .+ headed (?:north|south|east|west|up|down)\.|There are traces of .+ having been here. Perhaps they lead (?:north|south|east|west|up|down)\?|You have no idea what you\'re doing\, but maybe .+ is (?:north|south|east|west|up|down)\?|You couldn\'t find a path to .+ from here\.|.+ is here\!$"
+	<trigger match="^You are (?:almost )?certain that .+ is (?:north|south|east|west|up|down) from here\.|You are confident that .+ passed through here, heading (?:north|south|east|west|up|down)\.|The trail of .+ is confusing, but you're reasonably sure .+ headed (?:north|south|east|west|up|down)\.|There are traces of .+ having been here. Perhaps they lead (?:north|south|east|west|up|down)\?|You have no idea what you\'re doing\, but maybe .+ is (?:north|south|east|west|up|down)\?|You couldn\'t find a path to .+ from here\.|.+ is here\!$"
 		script="hunt_trick_continue"
 		name="trg_hunt_trick_continue_dir" group="HuntTrick"
 		enabled="n" regexp="y" sequence="100" > </trigger>
 
-	<trigger
-		match="^You are (?:almost )?certain that .+ is through .+\.|You are confident that .+ passed through here, heading through .+\.|The trail of .+ is confusing, but you're reasonably sure .+ headed through .+\.|There are traces of .+ having been here\. Perhaps they lead through .+\?|You have no idea which way .+ went\.$"
+	<trigger match="^You are (?:almost )?certain that .+ is through .+\.|You are confident that .+ passed through here, heading through .+\.|The trail of .+ is confusing, but you're reasonably sure .+ headed through .+\.|There are traces of .+ having been here\. Perhaps they lead through .+\?|You have no idea which way .+ went\.$"
 		script="hunt_trick_continue"
 		name="trg_hunt_trick_continue_portal" group="HuntTrick"
 		enabled="n" regexp="y" sequence="100" > </trigger>
@@ -3175,16 +3210,6 @@
 		match="^You raise a level\! You are now level \d+\.$"
 		script="noexp_raise_level"
 		enabled="y" regexp="y" sequence="100" keep_evaluating="y"> </trigger>
-	
-	<trigger name="trg_cp_check_noexp"
-		match="You may take a campaign at this level."
-		script="cp_check_noexp"
-		enabled="y" regexp="n" sequence="100" > </trigger>
-
-	<trigger name="trg_new_cp_must_level"
-		match="You will have to level before you can go on another campaign."
-		script="new_cp_must_level"
-		enabled="y" regexp="n" sequence="100" keep_evaluating="y" > </trigger>
 
 	<!-- Other triggers -->
 	<trigger name="trg_gag_all"
