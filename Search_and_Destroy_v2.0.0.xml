@@ -933,14 +933,14 @@
 		cpstatus_can_I_get_new_cp = "yes"
 		print("cp check yes can get new cp")
 		noexp_can_get_new_cp()
-		--xgui_RefreshWindow()
+		xgui_RefreshWindow()
 	end
 	
 	function cp_check_no_cant_get_new_cp()	-- from cp check
 		cpstatus_can_I_get_new_cp = "no"
 		print("cp check no cant get new cp")
 		noexp_cannot_get_new_cp()
-		--xgui_RefreshWindow()
+		xgui_RefreshWindow()
 	end	
 
 	function can_I_currently_get_new_cp()	-- return boolean
