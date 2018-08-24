@@ -24,12 +24,12 @@
 - '**ht** \<**mobname**\>' runs hunt trick on mobname, 2.mobname, 3.mobname, etc. until it finds the target or fails to do so after testing all instances.
 - '**ht** \<*n*.**mobname**\>' runs hunt trick starting with *n*.mob Useful for skipping past no-hunt or similar mobs — these will interrupt hunt trick and cause it to time out or simply fail to locate.  "No-hunt" means hunt returns a "No one by that name" message as if the mob doesn't exist at all.  Normally-huntable mobs return "You seem unable to hunt that target for some reason" when you get it as a cp (or gq) target.
 - '**ht abort**', '**hta**', and '**ht0**' all cancel a hunt trick in progress without returning any results.
- 
+
 ###"qw" (quick where) command:
- - '**qw**' gets results for your currently-targeted cp mob.
- - '**qw** \<**mob**\>' gets results for given mob.
- - '**qw** \<*n*.**mob**\>' gets results for *n*.mob (e.g. 3.fido).
- - Somewhat confusingly, the syntax for "qw" is similar to hunt trick, however "qw" searches 
+- '**qw**' gets results for your currently-targeted cp mob.
+- '**qw** \<**mobname**\>' gets results for given mobname.  Use this when the auto-guesser fails.
+- '**qw** \<*n*.**mobname**\>' gets results for *n*.mobname (e.g. 3.fido).
+- Somewhat confusingly, the syntax for "qw" is similar to hunt trick, however "qw" searches 
  - "qw" will fail if the mob is flagged no-where, and will fail if the mob is hidden and your character fails the detect roll.
   
  
