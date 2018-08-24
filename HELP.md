@@ -29,8 +29,8 @@
 - '**qw**' gets results for your currently-targeted cp mob.
 - '**qw** \<**mobname**\>' gets results for given mobname.  Use this when the auto-guesser fails.
 - '**qw** \<*n*.**mobname**\>' gets results for *n*.mobname (e.g. 3.fido).
-- Somewhat confusingly, the syntax for "qw" is similar to hunt trick, however "qw" searches 
- - "qw" will fail if the mob is flagged no-where, and will fail if the mob is hidden and your character fails the detect roll.
+- Note that "qw" searches only one target, unlike hunt trick (whose input looks similar).  Use "xwhere" to 'where' multiple mobname instances.
+- "qw" will fail if the mob is flagged no-where, or in a dark room.  It works intermittently on hidden mobs due to your detect roll vs hidden.
   
  
  
