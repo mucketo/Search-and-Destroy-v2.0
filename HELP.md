@@ -6,7 +6,7 @@
 - '**xcp 0**' clears the current target and its room search results.
 - '**xcp mode** \<**ht**\|**qw**\|**off**\>' determines what xcp does after running to an area — "ht", "qw", nothing (area cp's only).  
 - For area cp's, "xcp" first runs to target area.  Upon arrival, it does hunt trick to pick out your cp mob, then does quick-where to find and display the room(s).  If the area has multiple rooms with that name, your mob could be in any of them, so check each in turn until you find and kill your target.
-- For room cp's, "xcp" runs to the
+- For room cp's, "xcp" gets the room and area info from mapper and generates a direct run to that room.  If the same roomname exists in multiple areas, the cp target list builder will generate a list index for each of them, which can be barely noticeable, or flood the whole list with 12 links for one mob.  This is on the list of current problem-solve items and sooner or later will probably be fixed.
 - Unknown mobs can't be targeted because the location isn't in your mapper db.  For area cp's, this means you've never been to the area at all.  For room cp's it means you haven't mapped any rooms with that name in any area — in most of these cases you'll have been to the area before, but haven't explored (i.e. mapped) every room.
 
 ### "goto" command — run to room within area after getting search results
