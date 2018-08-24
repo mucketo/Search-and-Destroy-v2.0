@@ -11,7 +11,7 @@
 
 ### "goto" command — run to room within area after getting search results
 - '**go**' runs to first room on the list returned by hunt trick / quick where.
-- '**go**' \<*n*\> runs to the *n*th room on the list.
+- '**go** \<*n*\>' runs to the *n*th room on the list.
 - '**go 0**' runs to the area start room (see 'xset mark')
  
 ### "nx" and "nx-" commands — run to next or previous room in list of results
