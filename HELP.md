@@ -19,7 +19,7 @@
 - '**nx-**' runs to previous room.
 - If you don't use 'go' first, 'nx' and 'nx-' will both run to the first room on the list (same as 'go')
 
-### "ht" (hunt trick) command — leverage cp hunt mechanics to identify target mob and find its location
+### "ht" (hunt trick) command — leverage cp hunt mechanics to find target mob and location
 - '**ht**' runs the hunt trick (ingame: **'help hunt trick'**) on your currently-targeted cp mob.
 - '**ht** \<**mobname**\>' runs hunt trick on mobname, 2.mobname, 3.mobname, etc. until it finds the target or fails to do so after testing all instances.
 - '**ht** \<*n*.**mobname**\>' runs hunt trick starting with *n*.mob Useful for skipping past no-hunt or similar mobs — these will interrupt hunt trick and cause it to time out or simply fail to locate.  "No-hunt" means hunt returns a "No one by that name" message as if the mob doesn't exist at all.  Normally-huntable mobs return "You seem unable to hunt that target for some reason" when you get it as a cp (or gq) target.
