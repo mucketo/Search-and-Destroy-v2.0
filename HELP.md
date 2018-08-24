@@ -4,7 +4,7 @@
 - '**xcp**' targets the first available mob on your cp list and gets possible locations. "Available" means living and location is known.  E.g. the first four mobs on your list are all dead, unknown, and/or both, "xcp" will ignore all of those and target the 5th mob.
 - '**xcp** \<*n*\>' targets the *n*th target on your cp list, dead or alive.  If dead, the MUD only ever gives the area name, even if the cp is room, so dead mobs are always handled as if the cp were area.
 - '**xcp 0**' clears the current target and its room search results.
-- '**xcp mode** \<**ht**\|**qw**\|**off**\>' a.  do hunt trick, quick where, or nothing after running to an area (area cp's only).  
+- '**xcp mode** \<**ht**\|**qw**\|**off**\>' determines what xcp does after running to an area — "ht", "qw", nothing (area cp's only).  
 - For area cp's, "xcp" first runs to target area.  Upon arrival, it does hunt trick to pick out your cp mob, then does quick-where to find and display the room(s).  If the area has multiple rooms with that name, your mob could be in any of them, so check each in turn until you find and kill your target.
 - For room cp's, "xcp" runs to the
 - Unknown mobs can't be targeted because the location isn't in your mapper db.  For area cp's, this means you've never been to the area at all.  For room cp's it means you haven't mapped any rooms with that name in any area — in most of these cases you'll have been to the area before, but haven't explored (i.e. mapped) every room.
