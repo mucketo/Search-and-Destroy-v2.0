@@ -1803,7 +1803,7 @@
 --	[[ Automatic noexp ]]
 	function xset_noexp_tnl(name, line, wildcards)		-- called by alias: "xset noexp" when argument given
 		local set_tnl = wildcards.arg or "-1"
-		if (wildcards.arg == "-1") then
+		if (wildcards.arg == "-1") or (wildcards.arg == "") or (wildcards.arg == nil) then
 			if (auto_noexp_tnl == 0) then
 				ColourNote("#FF5000", "", "Search and Destroy: Auto 'noexp' is currently OFF.")
 			else
