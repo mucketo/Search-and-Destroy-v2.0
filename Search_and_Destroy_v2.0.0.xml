@@ -45,7 +45,7 @@
 	require "tprint"
 	require "wait"
 
-	local current_sd_version = "Search & Destroy v2.0.0 (rel-1.2)"
+	local current_sd_version = "Search & Destroy v2.0.0 (rel-1.3)"
 	local plugin_id_gmcp_handler = "3e7dedbe37e44942dd46d264"		-- easier to remember the var names than the plugin id's
 	local plugin_id_gmcp_mapper = "b6eae87ccedd84f510b74714"
 	local plugin_id_z_order = "462b665ecb569efbf261422f"
@@ -1856,8 +1856,8 @@
 
 	function noexp_cannot_get_new_cp()	-- called by trigger:  You must level to get a new campaign
 		if (auto_noexp_tnl > 0) then
-			local plevel = tonumber(gmcp("char.status.level"))
-			if (plevel < 200) then	
+			local level = tonumber(gmcp("char.status.level"))
+			if (level < 200) then	
 				if (noexp_onoff == "on") and (player_on_cp == "yes") then			
 					ColourNote("#FF5000", "#000000", "Search and Destroy: Turning noexp OFF (must level to get new cp)")
 					set_noexp("off")
@@ -1865,15 +1865,22 @@
 			else
 				if (noexp_onoff == "on") then
 					set_noexp("off")
-					ColourNote("#FF5000", "#000000", "Search and Destroy: Turning noexp OFF (you have reached level ".. plevel ..")")
+					ColourNote("#FF5000", "#000000", "Search and Destroy: Turning noexp OFF (you have reached level ".. level ..")")
 				end
 			end
 		end
 	end
 	
 	function mobkill_awards_xp(name, line, wildcards)	-- called when mob kill awards xp
+		local level = tonumber(gmcp("char.status.level"))
 		if (auto_noexp_tnl > 0) then
-			DoAfterSpecial(0.2, "check_current_tnl()", 12)
+			if (level < 200) then
+				DoAfterSpecial(0.2, "check_current_tnl()", 12)
+			else
+				set_noexp("off")
+				ColourNote("#FF5000", "#000000", "Search and Destroy: Turning noexp OFF (you have reached level ".. level ..")")
+				ColourNote("#FF5000", "#000000", "                    Use 'xset noexp off' to override.")
+			end
 		end
 	end
 
