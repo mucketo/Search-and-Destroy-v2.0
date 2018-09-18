@@ -45,7 +45,7 @@
 	require "tprint"
 	require "wait"
 
-	local current_sd_version = "Search & Destroy v2.0.0 (rel-1.3)"
+	local current_sd_version = "Search & Destroy v2.0.0 (rel-1.4)"
 	local plugin_id_gmcp_handler = "3e7dedbe37e44942dd46d264"		-- easier to remember the var names than the plugin id's
 	local plugin_id_gmcp_mapper = "b6eae87ccedd84f510b74714"
 	local plugin_id_z_order = "462b665ecb569efbf261422f"
@@ -66,11 +66,11 @@
 	local quest_info = {qmob = "", area = "", room = "", keyword="", status="0"}
 -- campaign details (type, level, targets)
 	local cp_info_level = tonumber(GetVariable("mcvar_cp_level")) or 0	-- campaign status, etc. variables
-	local cp_type = GetVariable("mcvar_cp_type") or "none"
+	local cp_info_type = "init"
 	local cp_target_list = {}
 -- campaign data processing
 	local cp_check_list = {}
-	local cp_check_index = 1
+	--local cp_check_index = 1
 	local cp_info_targets = {}
 	local cp_info_index = 1
 	local gotoList = {}	-- list of room id's used by go, nx, nx-
@@ -122,9 +122,9 @@
 	-- resizing constraints
 	RESIZE_TAG_SIZE = 15		-- Size of the zone for resizing via drag
 	REFRESH_DELAY = 0.02--0.066		-- Controls delay between Redraws while resizing.
-	local win_minimum_width = 320
+	local win_minimum_width = 325
 	local win_minimum_height = 40+RESIZE_TAG_SIZE
-	local win_width = tonumber(GetVariable("mcvar_xgui_WinSizeX")) or 320			-- window dimensions
+	local win_width = tonumber(GetVariable("mcvar_xgui_WinSizeX")) or 325			-- window dimensions
 	local win_height = tonumber(GetVariable("mcvar_xgui_WinSizeY")) or 280
 	local pos_x = tonumber(GetVariable("mcvar_xgui_WinPosX")) or 0			-- window position x,y coordinates
 	local pos_y = tonumber(GetVariable("mcvar_xgui_WinPosY")) or 0
@@ -135,8 +135,8 @@
 	local win_state = GetVariable("mcvar_xgui_WinState") or "max"
 	local win_init = false
 	-- position where cp target list starts; line spacing between list items
-	local offset = 36
-	local line_spacing = tonumber(GetVariable("mcvar_xgui_line_spacing")) or 15
+	local xgui_text_top = 46
+	local line_spacing = tonumber(GetVariable("mcvar_xgui_line_spacing")) or 14
 	local cplist_font_size = tonumber(GetVariable("mcvar_xgui_font_size")) or 8
 	local hotspots = {}
 	local itemHotspots = {}
@@ -152,7 +152,8 @@
 				r.maze = (string.match(r.details, "maze") == "maze") and "yes" or "no"
 					previousRoom = currentRoom or {}
 					currentRoom = { rmid = r.num, arid = r.zone, exits = r.exits, maze = r.maze } or {}
-					if (previousRoom.rmid ~= nil) and (currentRoom.rmid ~= nil) then
+					--if (previousRoom.rmid ~= nil) and (currentRoom.rmid ~= nil) then
+					if (previousRoom.rmid) and (currentRoom.rmid) then
 					end
 			elseif (text == "comm.quest") then	-- get quest info
 				local q = gmcp("comm.quest")
@@ -890,25 +891,24 @@
 		local mobname = wildcards.mob
 		local location = wildcards.loc
 		local keyword = guess_mob_keywords(mobname, false)
-		cp_info_targets[cp_info_index] = { mob = mobname, loc = location, kw = keyword, ord = cp_info_index}
+		cp_info_targets[cp_info_index] = { mob = mobname, loc = location, kw = keyword, ctype = "", ord = cp_info_index}
 		cp_info_index = cp_info_index + 1
 	end
 	
 	function cp_info_end()
-		cp_info_type_check()
-		if cp_type == "area" then
-			--for i,v in ipairs (cp_info_targets) do
-			--	print(areaNameXref[v.loc] .. " " .. cp_info_level)
-			--end
-		end
-		DoAfterSpecial(0.2, "cp ch", sendto.execute)
+		local t = cp_info_targets
+		cp_info_type_check(t)
+		DoAfterSpecial(0.3, "cp ch", sendto.execute)
 	end
 
-	function cp_info_type_check()
-		local list_items = #cp_info_targets
+	function cp_info_type_check(t)
+		local list = t
+		local list_items = #list
 		local areaCount = 0
 		local roomCount = 0
-		for i,v in ipairs (cp_info_targets) do
+		local cp_level = cp_info_level
+		local cp_type
+		for i,v in ipairs (list) do
 			if areaNameXref[v.loc] then
 				areaCount = areaCount + 1
 			else
@@ -920,8 +920,12 @@
 		else
 			cp_type = "room"
 		end
-		SetVariable("mcvar_cp_type", cp_type)
-		print("cp type detection: " .. cp_type .. " (level " .. cp_info_level .. ")\n")
+		SetVariable("mcvar_cp_info_type", cp_type)
+		cp_info_type = cp_type
+		print("cp type detection: "..cp_type.." (taken at level "..cp_level..")\n")
+		for i,v in ipairs (list) do
+			v.ctype = cp_type
+		end
 		return cp_type
 	end
 	
@@ -935,16 +939,21 @@
 		end
 		last_cp_check = time_check
 		cp_check_list = {}
-		cp_check_index = 1
+		--cp_check_index = 1
 		Send("cp ch")
 	end
 	
 	function cp_check_line(name, line, wildcards)
 		local mob = wildcards.mob
 		local loc = wildcards.loc
+		--local index = cp_check_index
 		local is_dead = (wildcards.isdead == "" and "no" or "yes")
-		cp_check_list[cp_check_index] =  { mob = mob, loc = loc, is_dead = is_dead, ord = cp_check_index}
-		cp_check_index = cp_check_index + 1
+		local alive = (wildcards.isdead == "" and "yes" or "no")
+		--cp_check_list[index] =  { mob = mob, loc = loc, is_dead = is_dead, alive = alive, ord = cp_check_index}
+		--cp_check_list[index] =  { mob = mob, loc = loc, is_dead = is_dead, alive = alive, ord = index}
+		table.insert(cp_check_list, { mob = mob, loc = loc, is_dead = is_dead, alive = alive, ord = index})
+		--index = index + 1
+	--	cp_check_index = index
 	end
 
 	function cp_check_end(name, line, wildcards)
@@ -984,21 +993,21 @@
 		local sqla = " SELECT uid as arid, name as areaName " .. "FROM areas " .. "WHERE name = %s " .. "ORDER BY arid ASC "
 		local sqlr = " SELECT r.uid as roomid, r.name as roomName, a.uid as arid, a.name as areaName, 'room' as type " .. "FROM rooms r " .. "INNER JOIN areas a ON r.area = a.uid " .. "WHERE r.name = %s "
 		
-		if cp_type == "area" then	-- branch for area cp
-			build_area_cp_target(t, sqla)
+		if cp_info_type == "area" then	-- branch for area cp
+			build_area_cp_targets(t, sqla)
 			
-		elseif cp_type == "room" then	-- branch for room cp
-			build_room_cp_target(t, sqlr, sqla)
+		elseif cp_info_type == "room" then	-- branch for room cp
+			build_room_cp_targets(t, sqlr, sqla)
 			
-		elseif cp_type == "none" then	-- should never be called but who knows
+		elseif cp_info_type == "none" then	-- should never be called but who knows
 			print("cp target builder error - attempt to run while not on campaign")
 			return
 		end
 		--tprint(cp_target_list)
-		print_cp_target_links(cp_target_list)	-- after building targe list, print the list of links to screen
+		print_cp_target_links(cp_target_list)	-- once list is built, display links in MUD output
 	end
 	
-	function build_area_cp_target(t, sqla)
+	function build_area_cp_targets(t, sqla)	-- t = cp_check_list
 		local cp_list = {}
 		local worldPath = GetInfo(66)..Trim(sanitize_filename(WorldName()))
 		local db = assert(sqlite3.open(worldPath .. ".db"))
@@ -1013,77 +1022,80 @@
 					mob = v.mob,
 					arid = row.arid,
 					is_dead = v.is_dead,
+					alive = v.alive,
+					color = ((v.alive == "yes") and "#E0E0E0" or "#404040"),
 					type = "area",
 					ord = row_index	}
 			end
 			if (row_count == 0) then	-- area name wasn't found in mapper db
 				row_index = row_index + 1
-				cp_list[row_index] = {mob = v.mob, location = v.loc, is_dead = v.is_dead, type = "unknown_area", ord = row_index}
+				cp_list[row_index] = {mob=v.mob, arid="-1", location=v.loc, is_dead=v.is_dead, alive = v.alive, color=((v.alive == "yes") and "#FF0000" or "#900000"), type="unknown_area", ord=row_index}
 			end
 		end
 		db:close_vm()
-		cp_target_list = cp_list
+		cp_target_list = copytable(cp_list)
 	end
 
-	function build_room_cp_target(t, sqlr, sqla)
-		cp_list = {}
+	function build_room_cp_targets(t, sqlr, sqla)
+		local cp_list = {}
 		local worldPath = GetInfo(66)..Trim(sanitize_filename(WorldName()))
 		local db = assert(sqlite3.open(worldPath .. ".db"))
 		local row_index = 0
-		local level_taken = cp_info_level
+		local level_taken = tonumber(cp_info_level) or 0
 		for i,v in ipairs (t) do
 			local row_count = 0
 			local select = string.format(sqlr, fixsql(v.loc))
 			local lastMobSignature = ""
 			for row in db:nrows(select) do
-					if (area_range[row.areaName] == nil) then	-- noquest areas never contain targets and are excluded from results
-						-- do nothing
-					else
-						local min_lvl = (area_range[row.areaName].min) or 1
-						local max_lvl = (area_range[row.areaName].max) or 300
-						local vmax = ((level_taken >= 100) and 20 or 30)
-						local vmin = 0
-						row_count = row_count + 1
-						local mobSignature = row.arid .. "|" .. v.mob
-						if (lastMobSignature ~= mobSignature) then
-							if (level_taken >= (min_lvl + vmin)) and (level_taken <= (max_lvl + vmax)) then	-- filter results outside sensible level range
-								row_index = row_index + 1
-								cp_list[row_index] = {
-									mob = v.mob,
-									roomid = row.roomid,
-									arid = row.arid,
-									roomName = row.roomName,
-									is_dead = v.is_dead,
-									minlvl = min_lvl,
-									maxlvl = max_lvl,
-									--info = row.info,
-									type = ((v.is_dead == "no") and "room" or "area"),	-- deals with dead mobs when area contains roomnames same as area name e.g. Aardington Estate
-									ord = row_index	}
-							else	-- area containing roomname is outside level ranges
-								local link = string.format("Ignoring due to level : %s in '%s' (%s) [%s-%s]", v.mob, row.roomName, row.arid, min_lvl, max_lvl)
-								Hyperlink("xm move " .. row.roomid, link, "Move to room " .. row.roomid, "Khaki", "", 0)
-								print("")
-							end
+				if (area_range[row.areaName] == nil) then	-- noquest areas never contain targets and are excluded from results
+					-- do nothing
+				else
+					local min_lvl = (area_range[row.areaName].min) or 1
+					local max_lvl = (area_range[row.areaName].max) or 300
+					local vmax = ((level_taken >= 100) and 20 or 30)
+					local vmin = 0
+					row_count = row_count + 1
+					local mobSignature = row.arid .. "|" .. v.mob
+					if (lastMobSignature ~= mobSignature) then
+						if (level_taken >= (min_lvl + vmin)) and (level_taken <= (max_lvl + vmax)) then	-- filter results outside sensible level range
+							row_index = row_index + 1
+							cp_list[row_index] = {
+								mob = v.mob,
+								roomid = row.roomid,
+								arid = row.arid,
+								roomName = row.roomName,
+								is_dead = v.is_dead,
+								alive = v.alive,
+								color = ((v.alive == "yes") and "#E0E0E0" or "#404040"),
+								minlvl = min_lvl,
+								maxlvl = max_lvl,
+								type = ((v.is_dead == "no") and "room" or "area"),	-- deals with dead mobs when area contains roomnames same as area name e.g. Aardington Estate
+								ord = row_index	}
+						else	-- area containing roomname is outside level ranges
+							local link = string.format("Ignoring due to level : %s in '%s' (%s) [%s-%s]", v.mob, row.roomName, row.arid, min_lvl, max_lvl)
+							Hyperlink("xm move " .. row.roomid, link, "Move to room " .. row.roomid, "Khaki", "", 0)
+							print("")
 						end
-						lastMobSignature = mobSignature
 					end
+					lastMobSignature = mobSignature
+				end
 			end
-			if (row_count == 0) then
+			if (row_count == 0) then			-- room name wasn't found in db
 				if (v.is_dead == "yes") then	-- mob is dead
 					local dead_count = 0
 					local select = string.format(sqla, fixsql(v.loc))
 					for dead_row in db:nrows(select) do	-- mob is dead but the location is known
 						dead_count = dead_count + 1
 						row_index = row_index + 1
-						cp_list[row_index] = {mob = v.mob, arid = row.arid, is_dead = "yes", type = "area", ord = row_index}
+						cp_list[row_index] = {mob=v.mob, arid=row.arid, is_dead="yes", alive="no", color="#404040", type="area", ord=row_index}
 					end
 					if dead_count == 0 then	-- mob is dead and the location is unknown
 						row_index = row_index + 1
-						cp_list[row_index] = {mob = v.mob, location = v.loc, is_dead = "yes", type = "unknown_area", ord = row_index}
+						cp_list[row_index] = {mob=v.mob, arid="-1", location=v.loc, is_dead="yes", alive="no", color="#900000", type="unknown_area", ord=row_index}
 					end
-				else	-- mob is alive, but no location is known
+				else	-- mob is alive, but location is unknown
 					row_index = row_index + 1
-					cp_list[row_index] = {mob = v.mob, location = v.loc, is_dead = v.is_dead, type = "unknown_room", ord = row_index}
+					cp_list[row_index] = {mob=v.mob, arid="-1", location=v.loc, is_dead="no", alive="yes", color="#FF0000", type="unknown_room", ord=row_index}
 				end
 			end
 		end
@@ -1091,47 +1103,54 @@
 		cp_target_list = copytable(cp_list)
 	end
 	
-	function print_cp_target_links(list)		-- show the list of target links from cp check (not the same as 'go' links)
+	
+	local print_cp_target_links_data = {
+		["area"] = { },
+		["room"] = { },
+		["unknown_area"] = { },
+		["unknown_room"] = { },
+		}
+	
+	function print_cp_target_links(t)		-- print target links from cp check (not the same as 'go' links)
+		local list = t
 		lastMobSignature = ""	--reset signature for next search
 			ColourNote("Gray", "", "\n------------------------------------------------------------------------------------------")
 		local index = 0
 		for i,v in ipairs (list) do
 			index = index + 1
-			local mobText = v.mob
-			local deadFlag
+			local mobText = v.mob .. ((v.alive == "yes") and "" or " [Dead]")
 			local is_dead = v.is_dead
+			local alive = v.alive
 			local link
 			local linkhelp
 			local notehelp = "Show notes for item " .. i
-			local color
-			if (is_dead == "yes") then
-				mobText = mobText .. " [Dead]"
-				deadFlag = true
-			end
+			--local color
+			--if (is_dead == "yes") then
+			--	mobText = mobText .. " [Dead]"
+			--end
 			
 			if (v.type == "area") then
 				link = string.format(" %2d  %s - %s", padRight(i, 6, " "), padRight(mobText, 30, " "), padRight(v.arid, 10, " "))
 				linkhelp = "Target cp mob " .. i .. " - " .. mobText .. " (" .. v.arid .. ")"
-				color = (is_dead == "yes") and "#404040" or "#E0E0E0"	-- dark grey, very light grey
-				color = (i == xcp_index) and "#FF5000" or color
-				Hyperlink("xcp " .. i, link, linkhelp, color, "", 0)
-				Hyperlink("roomnote area " .. v.arid, "  [notes]", notehelp, ((is_dead == "yes") and "#383838" or "lightgreen"), "", 0)
+				--color = v.color
+				Hyperlink("xcp " .. i, link, linkhelp, v.color, "", 0)
+				Hyperlink("roomnote area " .. v.arid, "  [notes]", notehelp, ((is_dead == "yes") and "#006000" or "lightgreen"), "", 0)
 			elseif (v.type == "room") then
 				local roomText = "'" .. v.roomName .. "' (" .. v.roomid .. ")"
 				link = string.format(" %2d  %s - %s %s", padRight(i, 4, " "), padRight(mobText, 30, " "), padRight(v.arid, 10, " "), padRight(roomText, 40, " "))
 				linkhelp = "Target cp mob " .. i .. " - " .. mobText .. " (" .. v.arid .. ")"
-				color = ((is_dead == "yes") and "#404040" or "#E0E0E0")	-- dark grey, very light grey
-				Hyperlink("xcp " .. i, link, linkhelp, color, "", 0)
+				--color = v.color
+				Hyperlink("xcp " .. i, link, linkhelp, v.color, "", 0)
 			elseif (v.type == "unknown_area") then
-				link = string.format(" %2d  %s - area '%s' not in mapper db", padRight(i, 4, " "), padRight(mobText, 30, " "), v.location)
+				link = string.format(" %2d  %s - unknown area: '%s'", padRight(i, 4, " "), padRight(mobText, 30, " "), v.location)
 				linkhelp = "Area not found in mapper database"
-				color = ((is_dead == "yes") and "#900000" or "#FF0000")	-- dark red, bright red
-				Hyperlink(" ", link, linkhelp, color, "", 0)
+				--color = v.color
+				Hyperlink(" ", link, linkhelp, v.color, "", 0)
 			elseif (v.type == "unknown_room") then
-				link = string.format(" %2d  %s - room '%s' not in mapper db", padRight(i, 4, " "), padRight(mobText, 30, " "), v.location)
+				link = string.format(" %2d  %s - unknown room: '%s'", padRight(i, 4, " "), padRight(mobText, 30, " "), v.location)
 				linkhelp = "Room not found in mapper database"
-				color = ((is_dead == "yes") and "#900000" or "#FF0000")	-- dark red, bright red
-				Hyperlink(" ", link, linkhelp, color, "", 0)
+				--color = v.color
+				Hyperlink(" ", link, linkhelp, v.color, "", 0)
 			end		
 			print("")
 		end
@@ -1143,13 +1162,15 @@
 		xgui_RefreshWindow()
 	end
 	
+	function print_cp_target_links_new()
+	end
 
 
 -- [[ "xcp" command ]]
 	function xcp_noarg()	-- xcp with no argument given, so find the first available mob (alive, location known) and go to it.
 		local index = 1
 		local cp_list = cp_target_list
-		if (cp_type == "none") then	-- abort if not on cp
+		if (cp_info_type == "none") then	-- abort if not on cp
 			ColourNote("#FF8800", "", "\nSearch and Destroy: 'xcp' aborted - you're not on a cp.\n")
 			return
 		elseif (#cp_list == 0) then	-- abort if on a cp, but target list is empty
@@ -1176,7 +1197,7 @@
 	function xcp_arg(name, line, wildcards)
 		local index = tonumber(wildcards.index)
 		local cp_list = cp_target_list
-		if (cp_type == "none") then	-- abort if not on cp
+		if (cp_info_type == "none") then	-- abort if not on cp
 			ColourNote("#FF8800", "", "\nSearch and Destroy: 'xcp' aborted - you're not on a cp.\n")
 			return
 		elseif (#cp_list == 0) then	-- abort if on a cp, but target list is empty
@@ -1266,7 +1287,7 @@
 -- [[  Goto room (go), goto next (nx), goto previous (nx-) ]]
 	function goto_number(name, line, wildcards)		-- called by "go" / "goto" command
 		gotoIndex = tonumber(wildcards.id) or 1
-		if (gotoList[gotoIndex] ~= nil) then
+		if gotoList[gotoIndex] then
 			if (tonumber(gotoList[gotoIndex]) == nil) then
 				Execute("xrt " .. gotoList[gotoIndex])
 				Execute("qs")
@@ -1598,19 +1619,20 @@
 	
 	local cp_simulate_toggle = "0"
 	function cp_simulate(name, line, wildcards)
+		cp_info_type = "area"
 		local time_check = os.clock()					-- prevent double cp checks from different plugins
 		if ((time_check - last_cp_check) < 1.0) then
 			return
 		end
 		last_cp_check = time_check
 		cp_check_list = {}
-		cp_check_index = 1
+		--cp_check_index = 1
 		EnableTrigger("trg_cp_check_line", true)
 		Simulate("\n")	
 		--if (cp_simulate_toggle == "0") then
 			Simulate("You still have to kill * A test mob (A Cold Path)\n")	--dead
 			Simulate("You still have to kill * Isscheburqua (Insanitaria)\n")
-			Simulate("You still have to kill * a rook citizen (Avian Kingdom)\n")
+			Simulate("You still have to kill * a rook citizen (Avian Kingdom - Dead)\n")
 			Simulate("You still have to kill * Lea, the farmer's daughter (Farmyard)\n")
 			Simulate("You still have to kill * a rook citizen (Nesting Home)\n")
 			Simulate("You still have to kill * a demon school student (The School of Horror)\n")
@@ -1822,18 +1844,18 @@
 		end
 	end
 
-	function set_noexp(on_off)
-		if (on_off == "on") or (on_off == "off") then
-			noexp_onoff = on_off
-			Send_GMCP_Packet("config noexp " .. on_off)
+	function set_noexp(x)
+		if (x == "on") or (x == "off") then
+			noexp_onoff = x
+			Send_GMCP_Packet("config noexp " .. x)
 		end
 		print("noexp onoff: " .. noexp_onoff)
 	end
 	
 	function noexp_can_get_new_cp()		-- called by line 'You may take campaign this level.' in 'cp check'
 		if (auto_noexp_tnl > 0) then	-- if auto_noexp_tnl is greater than zero, then auto-noexp is on.
-			local plevel = tonumber(gmcp("char.status.level"))
-			if (plevel < 200) then
+			local level = tonumber(gmcp("char.status.level"))
+			if (level < 200) then
 				local tnl = tonumber(gmcp("char.status.tnl"))
 				if (tnl < auto_noexp_tnl) and (noexp_onoff == "off") then		-- tnl less than set point and noexp is off --> turn that shit on
 					set_noexp("on")
@@ -1843,6 +1865,7 @@
 					ColourNote("#FF5000", "", "\nSearch and Destroy: Turning 'noexp' OFF (your TNL is greater than " .. auto_noexp_tnl .. ")")
 				end
 			else
+				print(noexp_onoff)
 				if (noexp_onoff == "on") then
 					set_noexp("off")
 					ColourNote("#FF5000", "#000000", "Search and Destroy: Turning noexp OFF (you have reached level ".. plevel ..")")
@@ -1877,9 +1900,11 @@
 			if (level < 200) then
 				DoAfterSpecial(0.2, "check_current_tnl()", 12)
 			else
-				set_noexp("off")
-				ColourNote("#FF5000", "#000000", "Search and Destroy: Turning noexp OFF (you have reached level ".. level ..")")
-				ColourNote("#FF5000", "#000000", "                    Use 'xset noexp off' to override.")
+				if (noexp_onoff == "on") then
+					set_noexp("off")
+					ColourNote("#FF5000", "#000000", "Search and Destroy: Turning noexp OFF (you have reached level ".. level ..")")
+					ColourNote("#FF5000", "#000000", "                    Use 'xset noexp off' to override.")
+				end
 			end
 		end
 	end
@@ -1936,16 +1961,16 @@
 		EnableTrigger("trg_cp_check_line", false)
 		EnableTrigger("trg_cp_check_end", false)
 		EnableTrigger("trg_campaign_type", false)
-		cp_type = "none"
+		cp_info_type = "none"
 		cp_info_level = "0"
 		cp_target_list = {}
 		cp_check_list = {}
-		cp_check_index = 1
+		--cp_check_index = 1
 		xcp_index = 0
 		cp_info_targets = {}
 		cp_info_index = 1
 		player_on_cp = "no"
-		SetVariable("mcvar_cp_type", cp_type)
+		SetVariable("mcvar_cp_info_type", cp_info_type)
 		SetVariable("mcvar_cp_level", cp_info_level)
 		xgui_cp_level = "off"
 		xgui_ClearWindow()
@@ -2407,7 +2432,7 @@
 			WindowFont(win, "window_title", "Consolas", 10, false, false, false, false) 				-- title bar font
 			WindowFont(win, "button_1", "Segoe", 10, true, false, false, false)						-- main button font
 			WindowFont(win, "button_2", "Segoe", 10, true, false, false, false) 					-- title bar button font
-			WindowFont(win, "cplevel", "Consolas", 12, false, false, false, false)							-- cp level font
+			WindowFont(win, "cplevel", "Consolas", 11, false, false, false, false)							-- cp level font
 			WindowFont(win, "cplist_area", "Lucida Sans Unicode", cplist_font_size, false, false, false, false)	-- cp list font, area cp's
 			WindowFont(win, "cplist_room", "Segoe", cplist_font_size, false, false, false, false)					-- cp list font, room cp's
 			if (IsPluginInstalled(plugin_id_z_order) and GetPluginInfo(plugin_id_z_order, 17)) then
@@ -2420,14 +2445,29 @@
 
 	local bt = {
 		["xcp"] = { L=5, T=20, W=30, H=25},
-		["go"] = { L=38, T=20, W=30, H=25},
-		["kk"] = { L=71, T=20, W=30, H=25},
-		["nx"] = { L=104, T=20, W=30, H=25},
-		["qs"] = { L=137, T=20, W=30, H=25},
-		["ref"] = { L=181, T=20, W=30, H=25},
-		["hta"] = { L=211, T=20, W=30, H=25},
-		["clr"] = { L=241, T=20, W=30, H=25} }
+		["go"]  = { L=38, T=20, W=30, H=25},
+		["kk"]  = { L=71, T=20, W=30, H=25},
+		["nx"]  = { L=104, T=20, W=30, H=25},
+		["qs"]  = { L=137, T=20, W=30, H=25},
+		["ref"] = { L=180, T=20, W=30, H=25},
+		["hta"] = { L=210, T=20, W=30, H=25},
+		["clr"] = { L=240, T=20, W=30, H=25},
+		["lvl"] = { L=276, T=20, W=42, H=42}, 
+		}
 		
+	local button_1_list = {
+			[1] = { hsid = "hsXCP", L=  5, T=20, W=30, H=25, text = "xcp", tdx=3, tdy=3, exec1=     "xcp", exec2=   "xcp 0", tooltip = "Left click = get target\nRight click = clear target" },
+			[2] = { hsid = "hsGO",  L= 38, T=20, W=30, H=25, text =  "go", tdx=7, tdy=3, exec1=      "go", exec2=      "go", tooltip = "Go to room 1" },
+			[3] = { hsid = "hsKK",  L= 71, T=20, W=30, H=25, text =  "kk", tdx=8, tdy=3, exec1=      "kk", exec2=      "kk", tooltip = "Left click = 'kill' target mob\nRight click = kill with special" },
+			[4] = { hsid = "hsNX",  L=104, T=20, W=30, H=25, text =  "nx", tdx=7, tdy=3, exec1=      "nx", exec2=     "nx-", tooltip = "Left click = goto next\nRight click = goto prev" },
+			[5] = { hsid = "hsQS",  L=137, T=20, W=30, H=25, text =  "qs", tdx=8, tdy=3, exec1=      "qs", exec2=      "qs", tooltip = "Quick-scan for current target (cp, quest, ht, qw)" },
+			[6] = { hsid = "hsREF", L=180, T=20, W=30, H=25, text = "ref", tdx=6, tdy=3, exec1="xgui ref", exec2="xgui ref", tooltip = "Refresh target list (cp check)" },
+			[7] = { hsid = "hsHTA", L=210, T=20, W=30, H=25, text = "hta", tdx=5, tdy=3, exec1=     "hta", exec2=     "hta", tooltip = "Abort hunt-trick" },
+			[8] = { hsid = "hsCLR", L=240, T=20, W=30, H=25, text = "clr", tdx=6, tdy=3, exec1="xgui clr", exec2="xgui clr", tooltip = "Clear target list" },
+			}
+
+	local button_1_hs_list = {"hsXCP", "hsGO", "hsKK", "hsNX", "hsQS", "hsREF", "hsHTA", "hsCLR"}
+			
 	function draw_window()
 		WindowRectOp (win, miniwin.rect_fill, 0, 0, 0, 0, background_colour)				-- Clear the window, which is the first step in updating it!
 		WindowRectOp (win, 2, 0, 0, 0, 17, 0x000000)						 	-- Draw title bar background and set color (almost black, "17" is height)
@@ -2441,34 +2481,22 @@
 					false)						-- not unicode
 
 		if (hotspots["hsDrag1"] == nil) then
-			hotspots["hsDrag1"] = WindowAddHotspot(win, "hsDrag1", 0, 0, win_width-20, 16, -- hotspot id, rectangle (left, top, right, bottom)
+			hotspots["hsDrag1"] = WindowAddHotspot(win, "hsDrag1", 0, 0, win_width-1, 16, -- hotspot id, rectangle (left, top, right, bottom)
 						"mouseover", "cancelmouseover", "mousedown", "cancelmousedown", "mouseup", 
 						"Left click = Drag title bar to move\nRight click = Send window to front/back", miniwin.cursor_arrow, 0)
 			WindowDragHandler(win, "hsDrag1", "dragmove", "dragrelease", 0) 
 		end
 
-		--Main action buttons. Syntax:  draw_button_1(X, Y, text, hsName, hint, text_dx, text_dy)
-		draw_button_1(  5, 20, "xcp", "hsXCP", "Left click = get target\nRight click = clear target", 3, 3)												-- xcp
-		draw_button_1( 38, 20, "go" , "hsGO" , "Go to room 1", 7, 3)										-- GO
-		draw_button_1( 71, 20, "kk" , "hsKK" , "Kill target mob", 8, 3)									-- KK
-		draw_button_1(104, 20, "nx" , "hsNX" , "Left click = goto next\nRight click = goto prev", 7, 3)	-- NX
-		draw_button_1(137, 20, "qs" , "hsQS" , "Quick-scan for target", 8, 3)								-- QS
-		draw_button_1(181, 20, "ref", "hsREF", "Refresh target list (cp check)", 6, 3)				-- ref
-		draw_button_1(211, 20, "hta", "hsHTA", "Abort hunt-trick", 5, 3)								-- hta
-		draw_button_1(241, 20, "clr", "hsCLR", "Clear target list", 6, 3)								-- clr
 		
-		draw_cplevel(275, 20)
-
-		-- GUI title bar buttons. Syntax:  draw_button_2(left, top, width, height, text, hsName, hint, text_dx, text_dy)
-		--draw_button_2(win_width - 17, 0, 17, 17, "?", "hsHelp", "Show help", 4, 0)			-- help
-		--draw_button_2(win_width - 30, 0, 15, 17, ".", "hsMinimize", "Minimize", 5, 0)		-- minimize
-		--draw_button_2(win_width - 15, 0, 15, 17, "^", "hsMaximize", "Maximize", 3, 0)		-- maximize
-		--print("win_width=" .. win_width)
+		for i,v in ipairs (button_1_list) do -- draw main action buttons
+			draw_button_1(v.L, v.T, v.text, v.hsid, v.tooltip, v.tdx, v.tdy)
+		end
+		draw_cplevel(277, 19)
 		Redraw()
 	end
 		
-	function draw_button_1(X0, Y0, text, hsName, hint, text_dx, text_dy)					-- Draw button type 1 (main action buttons)
-		local x,y,w,z = X0, Y0, X0+30, Y0+25
+	function draw_button_1(L, T, text, hsName, tooltip, text_dx, text_dy)					-- Draw button type 1 (main action buttons)
+		local x,y,w,z = L, T, L+30, T+25
 		local tx,ty = (x+text_dx), (y+text_dy)	-- x and y values for text location
 		local bgcolor = 0x000000
 		local color_1 = 0xE0E0E0
@@ -2479,12 +2507,12 @@
 		if (hotspots[hsName] == nil) then																-- Make button clickable by defining a hotspot
 			hotspots[hsName] = WindowAddHotspot(win, hsName, x, y, w, z,							-- Hotspot name and location info
 				"mouseover", "cancelmouseover", "mousedown_b1", "cancelmousedown_b1", "mouseup_b1",				-- Mouse actions
-				"" .. (hint or text), miniwin.cursor_arrow, 0)											-- Tooltip text, cursor shape (hand)
+				"" .. (tooltip or text), miniwin.cursor_arrow, 0)											-- Tooltip text, cursor shape (hand)
 		end
 	end
 	
-	function draw_button_2(X0, Y0, text, hsName, hint, text_dx, text_dy)					-- Draw button type 2
-		local x,y,w,z = X0, Y0, X0+30, Y0+25											-- x and y values for button boundaries
+	function draw_button_2(L, T, text, hsName, tooltip, text_dx, text_dy)					-- Draw button type 2
+		local x,y,w,z = L, T, L+30, T+25											-- x and y values for button boundaries
 		local tx,ty = (x+text_dx), (y+text_dy)	-- x and y values for text location
 		local bgcolor = 0x000060
 		local color_1 = 0x80E0E0
@@ -2496,41 +2524,67 @@
 			hotspots[hsName] = WindowAddHotspot(win, hsName, x,y,w,z,							-- Hotspot name and location info
 				--"mouseover", "cancelmouseover", "mousedown", "cancelmousedown", "mouseup", 				-- Mouse actions
 				"", "", "", "", "",
-				"" .. (hint or text), miniwin.cursor_arrow, 0)											-- Tooltip text, cursor shape (hand)
+				"" .. (tooltip or text), miniwin.cursor_arrow, 0)											-- Tooltip text, cursor shape (hand)
 		--end
 	end
 
 	function draw_cplevel(left, top)				-- Draw button type 1 (main action buttons)
-		local width = 41
-		local height = 25
-		local x1,x2,y1,y2 = left, (left+width), top, (top+height)		-- left, right, top, bottom									-- x and y values for button boundaries
-		local tdx = 3
-		local tdy = 3
-		local tx1,tx2,ty1,ty2 = (left+tdx), (left+width-tdy), (top+tdy), (top+height-tdy)	-- x and y values for text location
+		local width, height = 36, 36
+		local level, cp_type, get_new = cp_info_level, cp_info_type, cpstatus_can_I_get_new_cp
+		local cx1,cy1 = left, top
+		local cx2,cy2 =  (left + width), (top+height)
 		local bgcolor = 0x000000
-		local c1y = 0x40D000	-- green shade		color_1 = (cpstatus_can_I_get_new_cp == "yes") and c1y or c1n
-		local c2y = 0x207800
-		local c1n = 0x0010E0	-- red shade
-		local c2n = 0x000880
-		local c3 = (cp_type ~= "none") and 0x80FFFF or 0x0020FF		-- text (yellow) 
-		local color_1 = (cpstatus_can_I_get_new_cp == "yes") and c1y or c1n
-		local color_2 = (cpstatus_can_I_get_new_cp == "yes") and c2y or c2n
-	
-		WindowRectOp(win, 2, x1, y1, x2, y2, bgcolor)												-- Draw background and set color (black)
-		WindowRectOp (win, 4, x1, y1, x2, y2, color_1, color_2)											-- Draw button border (left/top = light grey, right/bottom = darker grey)
-		WindowText(win, "cplevel", string.format("%3s", cp_info_level), tx1+4, ty1, tx2, ty2, c3, false)								-- Draw button text ("button" font, light grey)
+		local c1y, c2y = 0x30C000, 0x004000	-- green shade		color_1 = (cpstatus_can_I_get_new_cp == "yes") and c1y or c1n
+		local c1n, c2n = 0x0040F0, 0x000080
+		local color_1, color_2, color_tx, level_text
+		local tdx, tdy = 0, 8
+		--level = 28
+		--cp_type = "area"
+		if cp_type == "init" then		-- plugin is loading, no info yet
+			color_1 = 0xC08000
+			color_2 = 0x402000
+			color_tx = 0x808080
+			tdx = 9
+			tdy = 8
+			level_text = "-1"
+		elseif cp_type == "none" then	-- player not on cp
+			color_1 = (get_new == "yes") and c1y or c1n
+			color_2 = (get_new == "yes") and c2y or c2n
+			color_tx = 0x0020FF
+			tdx = 6
+			level_text = "off"
+		else							-- player is on cp
+			color_1 = (get_new == "yes") and c1y or c1n
+			color_2 = (get_new == "yes") and c2y or c2n
+			color_tx = 0x80FFFF
+			level_text = tostring(level)
+			local llen = string.len(level_text)
+			if (llen == 3) then tdx = 6
+			elseif (llen == 2) then tdx = 10
+			elseif (llen == 1) then tdx = 14
+			else
+				tdx = 6
+				level_text = "err"
+			end
+		end
+			
+		WindowCircleOp(win, 1, cx1+1, cy1+1, cx2-1, cy2-1, color_2, 0, 2, bgcolor, 1)	-- inner circle (dark)
+		WindowCircleOp(win, 1, cx1-1, cy1-1, cx2+1, cy2+1, color_2, 0, 2, bgcolor, 1)	-- outer circle (dark)
+		WindowCircleOp(win, 1, cx1, cy1, cx2, cy2, color_1, 0, 2, bgcolor, 1)			-- main circle (bright)
 
-		--if (hotspots[hsName] == nil) then																-- Make button clickable by defining a hotspot
-		--	hotspots[hsName] = WindowAddHotspot(win, hsName, x1, y1, x2, y2,							-- Hotspot name and location info
-		--		"mouseover", "cancelmouseover", "mousedown_b1", "cancelmousedown", "mouseup_b1",				-- Mouse actions
-		--		"" .. (hint or text), miniwin.cursor_hand, 0)											-- Tooltip text, cursor shape (hand)
-		--end
-	end	
+		local tx1,tx2,ty1,ty2 = (left+tdx), (left+width), (top+tdy), (top+height-tdy)
+		WindowText(win, "cplevel", string.format("%s", level_text), tx1, ty1, tx2, ty2, color_tx, false)		
+	end
 
 	function xgui_ClearWindow()
 		draw_window()
 		add_resize_tag()
 		Redraw()
+	end
+	
+	function xgui_RefreshLinks()
+		Execute("cp ch")
+		mouseup(0, "hsMaximize")
 	end
 	
 	function xgui_RefreshWindow()
@@ -2578,13 +2632,9 @@
 			xgui_RefreshWindow()
 		end
 	end
-
 	
-	
-	--clear the cp mob list
-	function clear_hotspots()
+	function clear_hotspots()	--clear the cp mob list
 		for i,v in ipairs (itemHotspots) do
-			--Note(i, v)
 			WindowDeleteHotspot (win, v);
 		end
 		itemHotspots = {}
@@ -2601,21 +2651,21 @@
 	function xgui_build_target_list(list)		-- builds the list to be displayed in the window
 		local index = 0
 		for i,v in ipairs (list) do		-- Abort loop if printed item would not be visible.
-			if (tonumber(i) * line_spacing + offset > win_height - 5) then break end
+			if (tonumber(i) * line_spacing + xgui_text_top > win_height - 5) then break end
 			index = v.ord		
 			local is_dead = ((v.is_dead == "yes") and "yes" or "no")
-			local mobText = ((is_dead == "yes") and v.mob .. " [Dead]" or v.mob)
+			local mobText = v.mob .. ((v.alive == "yes") and "" or " [Dead]")
 			local place			-- the room or area name, or both
 			local tooltipText	-- mouseover text
 			local eventHandler	-- what happens when you click a link
-			local color = "0x0000FF"	-- red
-			if (is_dead == "yes") then
+			
+			--[[if (is_dead == "yes") then
 				color = "0x505050"		-- darkish grey
 			elseif (index == xcp_index) then
 				color = "0x0050FF"		-- orange 
 			else
 				color = "0xD0D0D0"		-- very light grey
-			end
+			end ]]
 			
 			if (v.type == "area") then
 				place = string.format("%s", v.arid)
@@ -2626,19 +2676,17 @@
 				tooltipText = "(" .. i .. ") " .. mobText .. " - " .. v.arid
 				eventHandler = "mouseup_cp"
 			elseif (v.type == "unknown_area") then	-- area not in mapper db
-				place = string.format("area '%s' not mapped", v.location)
-				color = ((is_dead == "yes") and "0x000040" or "0x0000E8")
+				place = string.format("'%s' (unknown)", v.location)
 				tooltipText = "(" .. i .. ") " .. mobText .. " - " .. v.location
 				eventHandler = ""
 			elseif (v.type == "unknown_room") then	-- room not in mapper db
-				place = string.format("room '%s' not mapped", v.location)
-				color = ((is_dead == "yes") and "0x000040" or "0x0000E8")
+				place = string.format("'%s' (unknown)", v.location)
 				tooltipText = "(" .. i .. ") " .. mobText .. " - " .. v.location
 				eventHandler = ""	
 			end
 			
 			local displayText = string.format("%s)  %s - %s", index, mobText, place)
-			local displayFont = "cplist_" .. cp_type	
+			local displayFont = "cplist_" .. cp_info_type	
 			
 
 			width   = WindowTextWidth(win, displayFont, displayText)  -- width of text
@@ -2651,27 +2699,28 @@
 			local hsTop = (tonumber(i) * line_spacing)
 			local hsLength = (10 + width)
 			if (hsLength < 0) then hsLength = 0 end
-			local hsHeight = (hsTop + 12 + offset)
+			local hsHeight = (hsTop + 12 + xgui_text_top)
 			if (hsHeight < 0) then hsHeight = 0 end
-			--if hsTop < 16 then offset = (offset + 16 - hsTop) end
+			--if hsTop < 16 then xgui_text_top = (xgui_text_top + 16 - hsTop) end
 			
+			local color = ((index == xcp_index) and "0x0040FF" or convert_color_format(v.color))
 			WindowText (win, displayFont, displayText,		-- displays the target links
-						10, hsTop + offset - 5, 0, 0,		-- rectangle of link hotspot
+						10, hsTop + xgui_text_top - 5, 0, 0,		-- rectangle of link hotspot
 						color,								-- color set according to above
 						false)								-- not Unicode
 
 			if (hsHeight < 0) then 
 				hsHeight = 0
-			elseif (hsTop + offset + hsHeight > win_height - RESIZE_TAG_SIZE) then
+			elseif (hsTop + xgui_text_top + hsHeight > win_height - RESIZE_TAG_SIZE) then
 				-- Prevent list item's hotspot from overlapping with the resize tag
 				if (hsLength > win_width - RESIZE_TAG_SIZE) then hsLength = win_width - RESIZE_TAG_SIZE end
 			end
-			--Note(string.format("%s %s %s %s", 5, (tonumber(i) * line_spacing) + offset, hsLength, hsHeight))
+			--Note(string.format("%s %s %s %s", 5, (tonumber(i) * line_spacing) + xgui_text_top, hsLength, hsHeight))
 			
 			itemHotspots[#itemHotspots+1] = i
 			WindowAddHotspot(win, 
 							i,  -- HS id
-							10, hsTop + offset, hsLength, hsHeight, -- rectangle
+							10, hsTop + xgui_text_top, hsLength, hsHeight, -- rectangle
 							"mouseover", 
 							"cancelmouseover", 
 							"mousedown",
@@ -2757,59 +2806,62 @@
 	function mouseup_b1(flags, hotspot_id)	-- when mouse button is released, redraw the buttons to normal appearance.
 		local f = flags
 		local hs = hotspot_id
+		local exec = ""
+		local b1_list = copytable(button_1_list)
 		local click = ((bit.band(f, 0x20) == 0) and "L" or "R")
-		if (hs == "hsXCP") then
-			draw_button_1(5, 20, "xcp", "hsXCP", "Left click = get target\nRight click = clear target", 3, 3)
-			Execute(((click == "L") and "xcp" or"xcp 0"))
+		
+		for i,v in ipairs (b1_list) do
+			if (hs == v.hsid) then
+				draw_button_1(v.L, v.T, v.text, v.hsid, v.tooltip, v.tdx, v.tdy)
+				Execute(((click == "L") and v.exec1 or v.exec2))
+				break
+			end
+		end
+		
+		--[[if (hs == "hsXCP") then
+			Execute(((click == "L") and "xcp" or "xcp 0"))
 		elseif (hs == "hsGO") then 
-			draw_button_1(38, 20, "go", "hsGO", "Go to room 1", 7, 3)
 			Execute("go")	-- GO button
 		elseif (hs == "hsKK") then 
-			draw_button_1(71, 20, "kk", "hsKK", "Kill target mob", 8, 3)
 			Execute("kk")	-- KK button
 		elseif (hs == "hsNX") then 
-			draw_button_1(104, 20, "nx", "hsNX", "Left click = goto next\nRight click = goto prev", 7, 3)
 			Execute(((click == "L") and "nx" or"nx-"))	-- NX button
 		elseif (hs == "hsQS") then 
-			draw_button_1(137, 20, "qs", "hsQS", "Quick-scan for target", 8, 3)
 			Execute("qs")	-- QS button
 		elseif (hs == "hsREF") then	-- REF button
-			draw_button_1(181, 20, "ref", "hsREF", "Refresh target list (cp check)", 6, 3)
-			Execute("cp ch")
-			mouseup(0, "hsMaximize")
+			Execute("xgui ref")
+			
 		elseif (hs == "hsHTA") then 
-			draw_button_1(211, 20, "hta", "hsHTA", "Abort hunt-trick", 5, 3)
 			Execute("hta")	-- HTA button
 		elseif (hs == "hsCLR") then	-- CLR button
-			draw_button_1(241, 20, "clr", "hsCLR", "Clear target list", 6, 3)
-			xgui_ClearWindow()
-		end
+			Execute("xgui clr")
+		end ]]
 	end
 
 	function mousedown_b1(flags, hotspot_id)	-- when mouse button is pressed:  
-		local f,hs = flags, hotspot_id
-		if     (hs == "hsXCP") then draw_button_2(  5, 20, "xcp", "hsXCP2", "", 3, 3)				-- xcp
-		elseif (hs ==  "hsGO") then draw_button_2( 38, 20, "go" , "hsGO2" , "", 7, 3)			-- GO
-		elseif (hs ==  "hsKK") then draw_button_2( 71, 20, "kk" , "hsKK2" , "", 8, 3)			-- KK
-		elseif (hs ==  "hsNX") then draw_button_2(104, 20, "nx" , "hsNX2" , "", 7, 3)			-- NX
-		elseif (hs ==  "hsQS") then draw_button_2(137, 20, "qs" , "hsQS2" , "", 8, 3)			-- QS
-		elseif (hs == "hsREF") then draw_button_2(181, 20, "ref", "hsREF2", "", 6, 3)		-- ref
-		elseif (hs == "hsHTA") then draw_button_2(211, 20, "hta", "hsHTA2", "", 5, 3)		-- hta
-		elseif (hs == "hsCLR") then	draw_button_2(241, 20, "clr", "hsCLR2", "", 6, 3)		-- clr
+		local f = flags
+		local hs = hotspot_id
+		local b1_list = copytable(button_1_list)
+		local click = ((bit.band(f, 0x20) == 0) and "L" or "R")
+		for i,v in ipairs (b1_list) do
+			if (hs == v.hsid) then
+				draw_button_2(v.L, v.T, v.text, v.hsid.."2", "", v.tdx, v.tdy)
+				break
+			end
 		end
 		Redraw()
 	end
 
 	function cancelmousedown_b1(flags, hotspot_id)
-		local f,hs = flags, hotspot_id
-		if     (hs == "hsXCP") then draw_button_1(  5, 20, "xcp", "hsXCP", "Left click = get target\nRight click = clear target", 3, 3)
-		elseif (hs ==  "hsGO") then draw_button_1( 38, 20, "go" , "hsGO" , "Go to room 1", 7, 3)
-		elseif (hs ==  "hsKK") then draw_button_1( 71, 20, "kk" , "hsKK" , "Kill target mob", 8, 3)
-		elseif (hs ==  "hsNX") then draw_button_1(104, 20, "nx" , "hsNX" , "Left click = goto next\nRight click = goto prev", 7, 3)
-		elseif (hs ==  "hsQS") then draw_button_1(137, 20, "qs" , "hsQS" , "Quick-scan for target", 8, 3)
-		elseif (hs == "hsREF") then	draw_button_1(181, 20, "ref", "hsREF", "Refresh target list (cp check)", 6, 3)
-		elseif (hs == "hsHTA") then draw_button_1(211, 20, "hta", "hsHTA", "Abort hunt-trick", 5, 3)
-		elseif (hs == "hsCLR") then	draw_button_1(241, 20, "clr", "hsCLR", "Clear target list", 6, 3)
+		local f = flags
+		local hs = hotspot_id
+		local b1_list = copytable(button_1_list)
+		local click = ((bit.band(f, 0x20) == 0) and "L" or "R")
+		for i,v in ipairs (b1_list) do
+			if (hs == v.hsid) then
+				draw_button_1(v.L, v.T, v.text, v.hsid, v.tooltip, v.tdx, v.tdy)
+				break
+			end
 		end
 		Redraw()
 	end
@@ -2870,6 +2922,8 @@
 		if bit.band(flags, 0x20) == 0 then
 			pos_x = WindowInfo(win, 17) - 50
 			pos_y = WindowInfo(win, 18) - 7
+			--pos_x = WindowInfo(win, 14)
+			--pos_y = WindowInfo(win, 15)
 			local max_x = GetInfo(281) - 100
 			local max_y = GetInfo(280) - 60
 			if (pos_x <= 1) then 			-- Prevents window from leaving the screen.
@@ -2917,6 +2971,15 @@
 	end 
 
 -- Internal Utilities
+	function convert_color_format(s)
+		local str=s
+		local con="0x"
+		for i=1,3,1 do
+			con = con .. string.sub(str, 8-(2*i), 9-(2*i))
+		end
+		return con
+	end
+
 	function copytable(t)
 		local new_t = {}
 		table.foreachi(t, 
@@ -2925,7 +2988,11 @@
 			end)
 		return new_t
 	end
-
+	
+	function cprint(c1, txt)		-- colournote abbreviation
+		ColourNote(c1, "", txt)
+	end
+	
 	function dbcheck(code)
 		if code ~= sqlite3.OK and    -- no error
 			code ~= sqlite3.ROW and   -- completed OK with another row of data
@@ -3412,6 +3479,14 @@
 
 	<alias	match="^(?:xgui|xset) front$"
 			script="bringToFront"
+			enabled="y" regexp="y" sequence="100" > </alias>
+	
+	<alias	match="^xgui clr$"
+			script="xgui_ClearWindow"
+			enabled="y" regexp="y" sequence="100" > </alias>
+
+	<alias	match="^xgui ref$"
+			script="xgui_RefreshLinks"
 			enabled="y" regexp="y" sequence="100" > </alias>
 			
 	<alias	match="^(?:xgui|xset) window (?<onoff>on|show|1|off|hide|0)$"
