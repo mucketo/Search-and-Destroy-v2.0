@@ -45,7 +45,7 @@
 	require "tprint"
 	require "wait"
 
-	local current_sd_version = "Search & Destroy v2.0.0 (rel-1.4)"
+	local current_sd_version = "Search & Destroy v2.0 (rel-1.0.5)"
 	local plugin_id_gmcp_handler = "3e7dedbe37e44942dd46d264"		-- easier to remember the var names than the plugin id's
 	local plugin_id_gmcp_mapper = "b6eae87ccedd84f510b74714"
 	local plugin_id_z_order = "462b665ecb569efbf261422f"
@@ -123,19 +123,21 @@
 	RESIZE_TAG_SIZE = 15		-- Size of the zone for resizing via drag
 	REFRESH_DELAY = 0.02--0.066		-- Controls delay between Redraws while resizing.
 	local win_minimum_width = 325
-	local win_minimum_height = 40+RESIZE_TAG_SIZE
+	local win_minimum_height = 45+RESIZE_TAG_SIZE
 	local win_width = tonumber(GetVariable("mcvar_xgui_WinSizeX")) or 325			-- window dimensions
 	local win_height = tonumber(GetVariable("mcvar_xgui_WinSizeY")) or 280
+	local win_drag_start_x
+	local win_drag_start_y
 	local pos_x = tonumber(GetVariable("mcvar_xgui_WinPosX")) or 0			-- window position x,y coordinates
 	local pos_y = tonumber(GetVariable("mcvar_xgui_WinPosY")) or 0
-	local win_height_minimized = 49			-- window dimensions min/max
+	local win_height_minimized = 45+RESIZE_TAG_SIZE			-- window dimensions min/max
 	local win_width_minimized = win_minimum_width
 	local win_width_maximized = tonumber(GetVariable("mcvar_xgui_WinMaxX")) or win_width_minimized
 	local win_height_maximized = tonumber(GetVariable("mcvar_xgui_WinMaxY")) or 280
 	local win_state = GetVariable("mcvar_xgui_WinState") or "max"
 	local win_init = false
 	-- position where cp target list starts; line spacing between list items
-	local xgui_text_top = 46
+	local win_text_top = 48
 	local line_spacing = tonumber(GetVariable("mcvar_xgui_line_spacing")) or 14
 	local cplist_font_size = tonumber(GetVariable("mcvar_xgui_font_size")) or 8
 	local hotspots = {}
@@ -2426,7 +2428,7 @@
 			WindowShow(win, true)  -- show it 
 
 			if (win_state == "min") then
-				mouseup(0, "hsMinimize")
+				mouseup_drag(0, "hsMinimize")
 			end		
 			
 			WindowFont(win, "window_title", "Consolas", 10, false, false, false, false) 				-- title bar font
@@ -2454,16 +2456,21 @@
 		["clr"] = { L=240, T=20, W=30, H=25},
 		["lvl"] = { L=276, T=20, W=42, H=42}, 
 		}
-		
+	
+	local b1_L = 47
+	local b1_T = 20
+	local b1_W = 30
+	local b1_H = 25
 	local button_1_list = {
-			[1] = { hsid = "hsXCP", L=  5, T=20, W=30, H=25, text = "xcp", tdx=3, tdy=3, exec1=     "xcp", exec2=   "xcp 0", tooltip = "Left click = get target\nRight click = clear target" },
-			[2] = { hsid = "hsGO",  L= 38, T=20, W=30, H=25, text =  "go", tdx=7, tdy=3, exec1=      "go", exec2=      "go", tooltip = "Go to room 1" },
-			[3] = { hsid = "hsKK",  L= 71, T=20, W=30, H=25, text =  "kk", tdx=8, tdy=3, exec1=      "kk", exec2=      "kk", tooltip = "Left click = 'kill' target mob\nRight click = kill with special" },
-			[4] = { hsid = "hsNX",  L=104, T=20, W=30, H=25, text =  "nx", tdx=7, tdy=3, exec1=      "nx", exec2=     "nx-", tooltip = "Left click = goto next\nRight click = goto prev" },
-			[5] = { hsid = "hsQS",  L=137, T=20, W=30, H=25, text =  "qs", tdx=8, tdy=3, exec1=      "qs", exec2=      "qs", tooltip = "Quick-scan for current target (cp, quest, ht, qw)" },
-			[6] = { hsid = "hsREF", L=180, T=20, W=30, H=25, text = "ref", tdx=6, tdy=3, exec1="xgui ref", exec2="xgui ref", tooltip = "Refresh target list (cp check)" },
-			[7] = { hsid = "hsHTA", L=210, T=20, W=30, H=25, text = "hta", tdx=5, tdy=3, exec1=     "hta", exec2=     "hta", tooltip = "Abort hunt-trick" },
-			[8] = { hsid = "hsCLR", L=240, T=20, W=30, H=25, text = "clr", tdx=6, tdy=3, exec1="xgui clr", exec2="xgui clr", tooltip = "Clear target list" },
+			[1] = { hsid = "hsXCP", L=  0+b1_L, T=b1_T, W=b1_W, H=b1_H, text = "xcp", tdx=3, tdy=3, exec1=     "xcp", exec2=   "xcp 0", tooltip = "Left click = get target\nRight click = clear target" },
+			[2] = { hsid = "hsGO",  L= 32+b1_L, T=b1_T, W=b1_W, H=b1_H, text =  "go", tdx=7, tdy=3, exec1=      "go", exec2=      "go", tooltip = "Go to room 1" },
+			[3] = { hsid = "hsNX",  L= 64+b1_L, T=b1_T, W=b1_W, H=b1_H, text =  "nx", tdx=7, tdy=3, exec1=      "nx", exec2=     "nx-", tooltip = "Left click = goto next\nRight click = goto prev" },
+			[4] = { hsid = "hsKK",  L= 96+b1_L, T=b1_T, W=b1_W, H=b1_H, text =  "kk", tdx=8, tdy=3, exec1=      "kk", exec2=      "kk", tooltip = "Left click = 'kill' target mob\nRight click = kill with special" },			
+			[5] = { hsid = "hsQS",  L=128+b1_L, T=b1_T, W=b1_W, H=b1_H, text =  "qs", tdx=8, tdy=3, exec1=      "qs", exec2=      "qs", tooltip = "Quick-scan for current target (cp, quest, ht, qw)" },
+
+			[6] = { hsid = "hsREF", L=170+b1_L, T=b1_T, W=b1_W, H=b1_H, text = "ref", tdx=6, tdy=3, exec1="xgui ref", exec2="xgui ref", tooltip = "Refresh target list (cp check)" },
+			[7] = { hsid = "hsHTA", L=200+b1_L, T=b1_T, W=b1_W, H=b1_H, text = "hta", tdx=5, tdy=3, exec1=     "hta", exec2=     "hta", tooltip = "Abort hunt-trick" },
+			[8] = { hsid = "hsCLR", L=230+b1_L, T=b1_T, W=b1_W, H=b1_H, text = "clr", tdx=6, tdy=3, exec1="xgui clr", exec2="xgui clr", tooltip = "Clear target list" },
 			}
 
 	local button_1_hs_list = {"hsXCP", "hsGO", "hsKK", "hsNX", "hsQS", "hsREF", "hsHTA", "hsCLR"}
@@ -2482,16 +2489,16 @@
 
 		if (hotspots["hsDrag1"] == nil) then
 			hotspots["hsDrag1"] = WindowAddHotspot(win, "hsDrag1", 0, 0, win_width-1, 16, -- hotspot id, rectangle (left, top, right, bottom)
-						"mouseover", "cancelmouseover", "mousedown", "cancelmousedown", "mouseup", 
+						"mouseover", "cancelmouseover", "mousedown_drag", "cancelmousedown", "mouseup_drag", 
 						"Left click = Drag title bar to move\nRight click = Send window to front/back", miniwin.cursor_arrow, 0)
-			WindowDragHandler(win, "hsDrag1", "dragmove", "dragrelease", 0) 
+			WindowDragHandler(win, "hsDrag1", "dragmove", "dragrelease", 0)
+			
 		end
-
 		
 		for i,v in ipairs (button_1_list) do -- draw main action buttons
 			draw_button_1(v.L, v.T, v.text, v.hsid, v.tooltip, v.tdx, v.tdy)
 		end
-		draw_cplevel(277, 19)
+		draw_cplevel(6, 20)
 		Redraw()
 	end
 		
@@ -2522,8 +2529,7 @@
 		WindowText(win, "button_2", text, tx,ty,w-1,z-1, color_1, false)								-- Draw button text ("button" font, light grey)
 		--if (hotspots[hsName] == nil) then																-- Make button clickable by defining a hotspot
 			hotspots[hsName] = WindowAddHotspot(win, hsName, x,y,w,z,							-- Hotspot name and location info
-				--"mouseover", "cancelmouseover", "mousedown", "cancelmousedown", "mouseup", 				-- Mouse actions
-				"", "", "", "", "",
+				"", "", "", "", "",	-- functions: "mouseover", "cancelmouseover", "mousedown", "cancelmousedown", "mouseup"
 				"" .. (tooltip or text), miniwin.cursor_arrow, 0)											-- Tooltip text, cursor shape (hand)
 		--end
 	end
@@ -2537,7 +2543,7 @@
 		local c1y, c2y = 0x30C000, 0x004000	-- green shade		color_1 = (cpstatus_can_I_get_new_cp == "yes") and c1y or c1n
 		local c1n, c2n = 0x0040F0, 0x000080
 		local color_1, color_2, color_tx, level_text
-		local tdx, tdy = 0, 8
+		local tdx, tdy = 0, 9
 		--level = 28
 		--cp_type = "area"
 		if cp_type == "init" then		-- plugin is loading, no info yet
@@ -2545,7 +2551,6 @@
 			color_2 = 0x402000
 			color_tx = 0x808080
 			tdx = 9
-			tdy = 8
 			level_text = "-1"
 		elseif cp_type == "none" then	-- player not on cp
 			color_1 = (get_new == "yes") and c1y or c1n
@@ -2584,53 +2589,15 @@
 	
 	function xgui_RefreshLinks()
 		Execute("cp ch")
-		mouseup(0, "hsMaximize")
+		mouseup_drag(0, "hsMaximize")
 	end
 	
 	function xgui_RefreshWindow()
 		--print("refresh window " .. os.clock())
 		draw_window()
 		add_resize_tag()
-		write_items()
+		win_display_cp_target_links()
 		Redraw()
-	end
-
-
-	
-	function xgui_ToggleWindowDisplay(name, line, wildcards)
-		local arg = wildcards.onoff
-		if (arg == "on") or (arg == "show") or (arg == "1") then
-			WindowShow(win, true)
-			SetVariable("mcvar_xgui_window_onoff", "on")
-		elseif (arg == "off") or (arg == "hide") or (arg == "0") then
-			WindowShow(win, false)
-			SetVariable("mcvar_xgui_window_onoff", "off")
-		end
-	end
-	
-	
-	function xgui_font_size(name, line, wildcards)
-		if (wildcards.size == "") then
-			print("Cp list font size = " .. cplist_font_size .. "\n")
-		else
-			cplist_font_size = tonumber(wildcards.size)
-			WindowFont(win, "cplist_area", "Lucida Sans Unicode", cplist_font_size, false, false, false, false)		-- cp list font, area cp's
-			WindowFont(win, "cplist_room", "Segoe", cplist_font_size, false, false, false, false)					-- cp list font, room cp's
-			print("Cp list font size set to " .. cplist_font_size .. ".\n")
-			SetVariable("mcvar_xgui_font_size", cplist_font_size)
-			xgui_RefreshWindow()
-		end
-	end
-
-	function xgui_line_space(name, line, wildcards)
-		if (wildcards.space == "") then
-			print("Cp list line spacing = " .. line_spacing .. "\n")
-		else
-			line_spacing = tonumber(wildcards.space)
-			print("Cp list line spacing set to " .. line_spacing .. ".\n")
-			SetVariable("mcvar_xgui_line_spacing", line_spacing)
-			xgui_RefreshWindow()
-		end
 	end
 	
 	function clear_hotspots()	--clear the cp mob list
@@ -2640,33 +2607,22 @@
 		itemHotspots = {}
 	end
 
-	function write_items()
+	function win_display_cp_target_links()
 		clear_hotspots()
 		if (win_state == "min") then
 			return
 		end
-		xgui_build_target_list(cp_target_list)
-	end
-
-	function xgui_build_target_list(list)		-- builds the list to be displayed in the window
+		local list = cp_target_list
 		local index = 0
 		for i,v in ipairs (list) do		-- Abort loop if printed item would not be visible.
-			if (tonumber(i) * line_spacing + xgui_text_top > win_height - 5) then break end
+			if (tonumber(i) * line_spacing + win_text_top > win_height - 5) then break end
 			index = v.ord		
 			local is_dead = ((v.is_dead == "yes") and "yes" or "no")
 			local mobText = v.mob .. ((v.alive == "yes") and "" or " [Dead]")
 			local place			-- the room or area name, or both
 			local tooltipText	-- mouseover text
 			local eventHandler	-- what happens when you click a link
-			
-			--[[if (is_dead == "yes") then
-				color = "0x505050"		-- darkish grey
-			elseif (index == xcp_index) then
-				color = "0x0050FF"		-- orange 
-			else
-				color = "0xD0D0D0"		-- very light grey
-			end ]]
-			
+
 			if (v.type == "area") then
 				place = string.format("%s", v.arid)
 				tooltipText = "(" .. i .. ") " .. mobText .. " - " .. v.arid
@@ -2699,28 +2655,28 @@
 			local hsTop = (tonumber(i) * line_spacing)
 			local hsLength = (10 + width)
 			if (hsLength < 0) then hsLength = 0 end
-			local hsHeight = (hsTop + 12 + xgui_text_top)
+			local hsHeight = (hsTop + 12 + win_text_top)
 			if (hsHeight < 0) then hsHeight = 0 end
-			--if hsTop < 16 then xgui_text_top = (xgui_text_top + 16 - hsTop) end
+			--if hsTop < 16 then win_text_top = (win_text_top + 16 - hsTop) end
 			
 			local color = ((index == xcp_index) and "0x0040FF" or convert_color_format(v.color))
 			WindowText (win, displayFont, displayText,		-- displays the target links
-						10, hsTop + xgui_text_top - 5, 0, 0,		-- rectangle of link hotspot
+						10, hsTop + win_text_top - 5, 0, 0,		-- rectangle of link hotspot
 						color,								-- color set according to above
 						false)								-- not Unicode
 
 			if (hsHeight < 0) then 
 				hsHeight = 0
-			elseif (hsTop + xgui_text_top + hsHeight > win_height - RESIZE_TAG_SIZE) then
+			elseif (hsTop + win_text_top + hsHeight > win_height - RESIZE_TAG_SIZE) then
 				-- Prevent list item's hotspot from overlapping with the resize tag
 				if (hsLength > win_width - RESIZE_TAG_SIZE) then hsLength = win_width - RESIZE_TAG_SIZE end
 			end
-			--Note(string.format("%s %s %s %s", 5, (tonumber(i) * line_spacing) + xgui_text_top, hsLength, hsHeight))
+			--Note(string.format("%s %s %s %s", 5, (tonumber(i) * line_spacing) + win_text_top, hsLength, hsHeight))
 			
 			itemHotspots[#itemHotspots+1] = i
 			WindowAddHotspot(win, 
 							i,  -- HS id
-							10, hsTop + xgui_text_top, hsLength, hsHeight, -- rectangle
+							10, hsTop + win_text_top, hsLength, hsHeight, -- rectangle
 							"mouseover", 
 							"cancelmouseover", 
 							"mousedown",
@@ -2769,8 +2725,8 @@
 		win_state = "max"
 		win_height_maximized = win_height
 		win_width_maximized = win_width
-		hotspots["hsDrag1"] = WindowAddHotspot(win, "hsDrag1", 0, 0, win_width-20, 16, -- hotspot id, rectangle (left, top, right, bottom)
-					"mouseover", "cancelmouseover", "mousedown", "cancelmousedown", "mouseup", 
+		hotspots["hsDrag1"] = WindowAddHotspot(win, "hsDrag1", 0, 0, win_width-1, 16, -- hotspot id, rectangle (left, top, right, bottom)
+					"mouseover", "cancelmouseover", "mousedown_drag", "cancelmousedown", "mouseup_drag", 
 					"Left click = Drag title bar to move\nRight click = Send window to front/back", miniwin.cursor_arrow, 0)	
 		WindowDragHandler(win, "hsDrag1", "dragmove", "dragrelease", 0)
 		xgui_RefreshWindow()
@@ -2817,25 +2773,6 @@
 				break
 			end
 		end
-		
-		--[[if (hs == "hsXCP") then
-			Execute(((click == "L") and "xcp" or "xcp 0"))
-		elseif (hs == "hsGO") then 
-			Execute("go")	-- GO button
-		elseif (hs == "hsKK") then 
-			Execute("kk")	-- KK button
-		elseif (hs == "hsNX") then 
-			Execute(((click == "L") and "nx" or"nx-"))	-- NX button
-		elseif (hs == "hsQS") then 
-			Execute("qs")	-- QS button
-		elseif (hs == "hsREF") then	-- REF button
-			Execute("xgui ref")
-			
-		elseif (hs == "hsHTA") then 
-			Execute("hta")	-- HTA button
-		elseif (hs == "hsCLR") then	-- CLR button
-			Execute("xgui clr")
-		end ]]
 	end
 
 	function mousedown_b1(flags, hotspot_id)	-- when mouse button is pressed:  
@@ -2866,15 +2803,18 @@
 		Redraw()
 	end
 	
-	function mouseup(flags, hotspot_id)			-- is active when 
+	function mousedown_drag(flags, hotspot_id)
+		win_drag_start_x = WindowInfo(win, 14)
+		win_drag_start_y = WindowInfo (win, 15)
+	end
+	
+	function mouseup_drag(flags, hotspot_id)
 		if (hotspot_id == "hsDrag1") then		-- Title bar
 			if bit.band(flags, 0x20) == 0 then	-- left click
 				local nothing
 			else								-- right click
 				right_click_menu()
 			end
-		elseif (hotspot_id == "hsHelp") then
-			Execute("ww help")
 		end
 	end
 
@@ -2899,7 +2839,7 @@
 			win_height = win_height_minimized
 			WindowResize(win, win_width, win_height, ColourNameToRGB("black"))
 			draw_window()
-			write_items()
+			win_display_cp_target_links()
 			add_resize_tag()
 			Redraw()	
 		elseif (result == "Expand Window") then
@@ -2915,14 +2855,15 @@
 	end
 
 	function do_trg_cp_complete(name, line, wildcards) 
-			mouseup(0, "hsCLR")
+			mouseup_drag(0, "hsCLR")
 	end
 
 	function dragmove(flags, hotspot_id)
 		if bit.band(flags, 0x20) == 0 then
-			pos_x = WindowInfo(win, 17) - 50
-			pos_y = WindowInfo(win, 18) - 7
-			--pos_x = WindowInfo(win, 14)
+			pos_x = WindowInfo(win, 17) -- - 50
+			pos_y = WindowInfo(win, 18) -- - 7
+			local delta_x = pos_x - win_drag_start_x
+			local delta_y = pos_y - win_drag_start_y
 			--pos_y = WindowInfo(win, 15)
 			local max_x = GetInfo(281) - 100
 			local max_y = GetInfo(280) - 60
@@ -2936,7 +2877,8 @@
 			elseif (pos_y >= max_y) then 	
 				pos_y = max_y
 			end
-			WindowPosition(win, pos_x, pos_y, miniwin.pos_stretch_to_view, miniwin.create_absolute_location) -- move window to new location
+			
+			WindowPosition(win, delta_x, delta_y, miniwin.pos_stretch_to_view, miniwin.create_absolute_location) -- move window to new location
 		else
 			return
 		end
@@ -2947,11 +2889,45 @@
 	--  print ("released at position", WindowInfo (win, 17), WindowInfo (win, 18))
 	end
 	
+		function xgui_ToggleWindowDisplay(name, line, wildcards)
+		local arg = wildcards.onoff
+		if (arg == "on") or (arg == "show") or (arg == "1") then
+			WindowShow(win, true)
+			SetVariable("mcvar_xgui_window_onoff", "on")
+		elseif (arg == "off") or (arg == "hide") or (arg == "0") then
+			WindowShow(win, false)
+			SetVariable("mcvar_xgui_window_onoff", "off")
+		end
+	end
 	
+	
+	function xgui_font_size(name, line, wildcards)
+		if (wildcards.size == "") then
+			print("Cp list font size = " .. cplist_font_size .. "\n")
+		else
+			cplist_font_size = tonumber(wildcards.size)
+			WindowFont(win, "cplist_area", "Lucida Sans Unicode", cplist_font_size, false, false, false, false)		-- cp list font, area cp's
+			WindowFont(win, "cplist_room", "Segoe", cplist_font_size, false, false, false, false)					-- cp list font, room cp's
+			print("Cp list font size set to " .. cplist_font_size .. ".\n")
+			SetVariable("mcvar_xgui_font_size", cplist_font_size)
+			xgui_RefreshWindow()
+		end
+	end
+
+	function xgui_line_space(name, line, wildcards)
+		if (wildcards.space == "") then
+			print("Cp list line spacing = " .. line_spacing .. "\n")
+		else
+			line_spacing = tonumber(wildcards.space)
+			print("Cp list line spacing set to " .. line_spacing .. ".\n")
+			SetVariable("mcvar_xgui_line_spacing", line_spacing)
+			xgui_RefreshWindow()
+		end
+	end
 	
 	function OnPluginSaveState()		-- save plugin state data
 		-- save window location
-		movewindow.save_state (win)		
+		movewindow.save_state(win)		
 		if WindowInfo(win, 3) and WindowInfo(win, 4) then
 			win_width = WindowInfo(win, 3)
 			win_height = WindowInfo(win, 4)
