@@ -2464,8 +2464,8 @@
 	local button_1_list = {
 			[1] = { hsid = "hsXCP", L=  0+b1_L, T=b1_T, W=b1_W, H=b1_H, text = "xcp", tdx=3, tdy=3, exec1=     "xcp", exec2=   "xcp 0", tooltip = "Left click = get target\nRight click = clear target" },
 			[2] = { hsid = "hsGO",  L= 32+b1_L, T=b1_T, W=b1_W, H=b1_H, text =  "go", tdx=7, tdy=3, exec1=      "go", exec2=      "go", tooltip = "Go to room 1" },
-			[3] = { hsid = "hsNX",  L= 64+b1_L, T=b1_T, W=b1_W, H=b1_H, text =  "nx", tdx=7, tdy=3, exec1=      "nx", exec2=     "nx-", tooltip = "Left click = goto next\nRight click = goto prev" },
-			[4] = { hsid = "hsKK",  L= 96+b1_L, T=b1_T, W=b1_W, H=b1_H, text =  "kk", tdx=8, tdy=3, exec1=      "kk", exec2=      "kk", tooltip = "Left click = 'kill' target mob\nRight click = kill with special" },			
+			[3] = { hsid = "hsKK",  L= 64+b1_L, T=b1_T, W=b1_W, H=b1_H, text =  "kk", tdx=8, tdy=3, exec1=      "kk", exec2=      "kk", tooltip = "Left click = 'kill' target mob\nRight click = kill with special" },			
+			[4] = { hsid = "hsNX",  L= 96+b1_L, T=b1_T, W=b1_W, H=b1_H, text =  "nx", tdx=7, tdy=3, exec1=      "nx", exec2=     "nx-", tooltip = "Left click = goto next\nRight click = goto prev" },
 			[5] = { hsid = "hsQS",  L=128+b1_L, T=b1_T, W=b1_W, H=b1_H, text =  "qs", tdx=8, tdy=3, exec1=      "qs", exec2=      "qs", tooltip = "Quick-scan for current target (cp, quest, ht, qw)" },
 
 			[6] = { hsid = "hsREF", L=170+b1_L, T=b1_T, W=b1_W, H=b1_H, text = "ref", tdx=6, tdy=3, exec1="xgui ref", exec2="xgui ref", tooltip = "Refresh target list (cp check)" },
