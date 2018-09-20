@@ -33,4 +33,9 @@
 - "qw" will fail if the mob is flagged no-where, or in a dark room.  It works intermittently on hidden mobs due to your detect roll vs hidden.
   
  
+### Window commands - change font size, line spacing, etc.
+- '**xset fontsize** \<*n*\>' changes target list font size.  Default is 8.
+- '**xset linespace** \<*n*\>' changes target list line spacing.  Default is 14.
+- '**xset window** \<**off**\|**hide**\|**0**\>' turns the window off and removes it from view.
+- '**xset window** \<**on**\|**show**\|**1**\>' turns the window on and displays it.
  
