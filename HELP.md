@@ -31,8 +31,11 @@
 - '**qw** \<*n*.**mobname**\>' gets results for *n*.mobname (e.g. 3.fido).
 - Note that "qw" searches only one target, unlike hunt trick (whose input looks similar).  Use "xwhere" to 'where' multiple mobname instances.
 - "qw" will fail if the mob is flagged no-where, or in a dark room.  It works intermittently on hidden mobs due to your detect roll vs hidden.
-  
- 
+
+### Vidblain navigation
+- '**xset vidblain**' turns on Vidblain navigation, which allows one to quickly and easily cross the dark portal into Vidblain.  It also compensates for the portal's reality-distortion and uncertain transit vector and landing room, enabling straightforward travel to Vidblain destinations which would otherwise be tedious at best.
+- '**xset vidblain** \<*level*\>' turns off Vidblain navigation when you reach the desired level, typically that of your lowest-level Vidblain area portal.  It does take tier into account, as well.  This is useful because it's always faster to use an area portal to get to Vidblain than to run via the dark portal.
+
 ### Window commands - change font size, line spacing, etc.
 - '**xset fontsize** \<*n*\>' changes target list font size.  Default is 8.
 - '**xset linespace** \<*n*\>' changes target list line spacing.  Default is 14.
