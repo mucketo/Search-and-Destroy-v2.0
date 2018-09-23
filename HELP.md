@@ -52,4 +52,8 @@
 - '**sdwindow linespace** \<*n*\>' changes target list line spacing.  Default is 14.
 - '**sdwindow** \<**off**\|**hide**\|**0**\>' turns the window off and removes it from view.
 - '**sdwindow** \<**on**\|**show**\|**1**\>' turns the window on and displays it.
- 
+
+### Xmapper commands
+- '**xm** \<**room name**\>' generates 'goto' links for matching rooms in the current area.
+- '**xm** \<**room name**\>**|**\<**area id**\>' generates 'goto' links for matching rooms in the given area id, e.g. 'xm along the sea floor|wooble'
+- '**xm** \<**room name**\>**|all**' generates 'goto' links for all matching rooms in your database.  Note, there is no limit on how many results it can return, other than the size of your db — as such it can easily spam your screen with hundreds or thousands of results if you let it.
