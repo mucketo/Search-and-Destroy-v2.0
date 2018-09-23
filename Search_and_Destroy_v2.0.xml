@@ -3439,21 +3439,21 @@
 			script="resume_page_size"
 			enabled="y" regexp="y" sequence="100" ignore_case="y" > </alias>
 
-	<alias	match="^(?:xgui|xset) fontsize( (?<size>[0-9]+))?$"
+	<alias	match="^xset fontsize( (?<size>[0-9]+))?$"
 			script="xgui_font_size"
 			enabled="y" regexp="y" sequence="100"> </alias>
 		
-	<alias	match="^(?:xgui|xset) linespace( (?<space>[0-9]+))?$"
+	<alias	match="^xset linespace( (?<space>[0-9]+))?$"
 			script="xgui_line_space"
 			enabled="y" regexp="y" sequence="100" > </alias>
 		
-	<alias	match="^(?:xgui|xset) winreset$"
+	<alias	match="^xset winreset$"
 			script="create_win"
 			enabled="y" regexp="y" sequence="100" send_to="12" >
 				<send>
 					win_init = false</send> </alias>
 
-	<alias	match="^(?:xgui|xset) front$"
+	<alias	match="^xset front$"
 			script="bringToFront"
 			enabled="y" regexp="y" sequence="100" > </alias>
 	
@@ -3465,7 +3465,7 @@
 			script="xgui_RefreshLinks"
 			enabled="y" regexp="y" sequence="100" > </alias>
 			
-	<alias	match="^(?:xgui|xset) window (?<onoff>on|show|1|off|hide|0)$"
+	<alias	match="^xset window (?<onoff>on|show|1|off|hide|0)$"
 			script="xgui_ToggleWindowDisplay"
 			enabled="y" regexp="y" sequence="100" > </alias>		
 </aliases>
