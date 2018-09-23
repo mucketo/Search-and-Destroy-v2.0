@@ -1,5 +1,10 @@
 # Search and Destroy v2.0.0 instruction manual
 
+### Auto-hunt
+- "ah <mob>" starts autohunt, which will hunt your mob and move you to the next room until you reach your mob.  Navigators can autohunt through portals.  It does not work with mapper cexits - autohunt uses the output of the hunt skill which is limited to cardinal directions only (and portals, for navigators).
+- Autohunt is very useful for navigating mazes.
+- Autohunt requires you to practice up your hunt for it to work.  If your skill is too low, autohunt will not work (it would be pointless as all the directions would be wrong).  Note that this has no effect on the hunt trick (see "ht" hunt trick below).
+
 ### campaign: "xcp" command - target a mob on your 'cp check' list and get location
 - '**xcp**' targets the first available mob on your cp list and gets possible locations. "Available" means living and location is known.  E.g. the first four mobs on your list are all dead, unknown, and/or both, "xcp" will ignore all of those and target the 5th mob.
 - '**xcp** \<*n*\>' targets the *n*th target on your cp list, dead or alive.  If dead, the MUD only ever gives the area name, even if the cp is room, so dead mobs are always handled as if the cp were area.
@@ -19,6 +24,7 @@
 - '**ht** \<**mobname**\>' runs hunt trick on mobname, 2.mobname, 3.mobname, etc. until it finds the target or fails to do so after testing all instances.
 - '**ht** \<*n*.**mobname**\>' runs hunt trick starting with *n*.mob Useful for skipping past no-hunt or similar mobs — these will interrupt hunt trick and cause it to time out or simply fail to locate.  "No-hunt" means hunt returns a "No one by that name" message as if the mob doesn't exist in the area.  Normally-huntable mobs return "You seem unable to hunt that target for some reason" when you get it as a cp (or gq) target.
 - '**ht abort**', '**hta**', and '**ht0**' all cancel a hunt trick in progress without returning any results.
+- Hunt trick does *not* require you to practice (or even have) the hunt skill.  If you don't actually have the skill, hunt will return random directions and also give the "unable to hunt" message for cp/gq mobs.
 
 ### "kk" (quick kill) command:
 - '**kk**' tries to kill the current target
