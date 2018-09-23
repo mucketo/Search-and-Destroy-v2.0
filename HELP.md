@@ -49,10 +49,10 @@
 
 ### Window commands - change font size, line spacing, etc.
 - The window can be dragged to a new location via the title bar, and resized via the widget at bottom right.
-- '**sdwindow fontsize** \<*n*\>' changes target list font size.  Default is 8.
-- '**sdwindow linespace** \<*n*\>' changes target list line spacing.  Default is 14.
-- '**sdwindow** \<**off**\|**hide**\|**0**\>' turns the window off and removes it from view.
-- '**sdwindow** \<**on**\|**show**\|**1**\>' turns the window on and displays it.
+- '**xset fontsize** \<*n*\>' changes target list font size.  Default is 8.
+- '**xset linespace** \<*n*\>' changes target list line spacing.  Default is 14.
+- '**xset** \<**off**\|**hide**\|**0**\>' turns the window off and removes it from view.
+- '**xset** \<**on**\|**show**\|**1**\>' turns the window on and displays it.
 
 ### Xmapper commands
 - '**xm** \<**room name**\>' generates 'goto' links for matching rooms in the current area.
