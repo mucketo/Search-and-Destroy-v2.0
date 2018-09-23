@@ -48,6 +48,7 @@
 - '**xset vidblain** \<*level*\>' turns off Vidblain navigation when you reach the desired level, typically that of your lowest-level Vidblain area portal.  It does take tier into account, as well.  This is useful because it's always faster to use an area portal to get to Vidblain than to run via the dark portal.
 
 ### Window commands - change font size, line spacing, etc.
+- The window can be dragged to a new location via the title bar, and resized via the widget at bottom right.
 - '**sdwindow fontsize** \<*n*\>' changes target list font size.  Default is 8.
 - '**sdwindow linespace** \<*n*\>' changes target list line spacing.  Default is 14.
 - '**sdwindow** \<**off**\|**hide**\|**0**\>' turns the window off and removes it from view.
