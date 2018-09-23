@@ -1,7 +1,7 @@
 # Search and Destroy v2.0.0 instruction manual
 
 ### Auto-hunt
-- '**ah** \<**mob**\>'" starts autohunt, which will hunt your mob and move you to the next room until you reach your mob.  Navigators can autohunt through portals.  It does not work with mapper cexits - autohunt uses the output of the hunt skill which is limited to cardinal directions only (and portals, for navigators).
+- '**ah** \<**mob**\>' starts autohunt, which will hunt your mob and move you to the next room until you reach your mob.  Navigators can autohunt through portals.  It does not work with mapper cexits - autohunt uses the output of the hunt skill which is limited to cardinal directions only (and portals, for navigators).
 - '**aha**' and '**ah0**' will cancel an auto-hunt in progress.
 - Autohunt is very useful for navigating mazes, but may put you at risk of aggressive monsters.
 - Autohunt requires you to practice up your hunt for it to work.  If your skill is too low, autohunt will not work (it would be pointless as all the directions would be wrong).  Note that this has no effect on the hunt trick (see "ht" hunt trick below).
