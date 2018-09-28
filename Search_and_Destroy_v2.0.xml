@@ -1089,7 +1089,7 @@
 					for dead_row in db:nrows(select) do	-- mob is dead but the location is known
 						dead_count = dead_count + 1
 						row_index = row_index + 1
-						cp_list[row_index] = {mob=v.mob, arid=row.arid, is_dead="yes", alive="no", color="#404040", type="area", ord=row_index}
+						cp_list[row_index] = {mob=v.mob, arid=dead_row.arid, is_dead="yes", alive="no", color="#404040", type="area", ord=row_index}
 					end
 					if dead_count == 0 then	-- mob is dead and the location is unknown
 						row_index = row_index + 1
