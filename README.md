@@ -3,7 +3,7 @@ Good morning, this S&D update is mostly internal code changes, fixes, and things
 
  - I rewrote the mob keyword guessing process from scratch, due to issues with it that I couldn't resolve simply by editing the existing code.  The new version should handle certain problem areas better than the old.  Hatchling Aerie is probably the most obvious example; pretty much every mob in the zone has "dragon whelp" in its keywords, which means hunt trick could take a while.  This and similar situations should be a lot better now.  Note that it's not perfect and won't correctly guess all keywords (it was never supposed to) but as before it will get most of them right, and the new process means I can add filtering that I couldn't before.  Also, as a 'bonus' the mob keywords will randomly vary in length, from 4 to 5 characters for double keywords, and somewhat more so for single-keyword mobs.  I was bored.
 
- - Mob keywords are now generated as part of the target list build process, rather than after the fact.  This makes it easier for script functions to access them.
+ - Mob keywords, mob link color, and similar things are determined during the cp target list build process, rather than after the fact.  This makes it easier for script functions to access them, and makes things like displaying the links faster.
 
  - Quick where has also been rewritten.  It was overly complicated and had some long-standing issues.  Most of the complexity came from the fact that quick where can be called manually or by script, and the approach that was taken to deal with that.  It was too convoluted and difficult to follow, so I fixed that.  Also, the new version sort-of checks to see if the 'where' output is just flat-out wrong.  For example, if I want to look for "a villager" I probably don't want info for "a confused shopper" but they both have villager as a keyword.  If the output is obviously wrong it will try 2.villager and so forth.  It can still get the wrong mob (e.g. "a confused villager" or similar) but if totally wrong it should be able to skip it and try the next.
 
@@ -15,13 +15,17 @@ Good morning, this S&D update is mostly internal code changes, fixes, and things
  
  - The process used to determine when you have arrived in the correct zone (area cp's) has been revamped and is faster.
  
- - Improved output when doing 'xq' to target your quest mob.
+ - Improved output when using 'xq' to target your quest mob, and improved quest status tracking.
  
- - I adjusted the level filtering in room cp's again.  This is just something that can't be gotten perfect simply by using the game-defined area level limits.  For example, living wall is level 86, but it's in an area with a level max of 55, so it will show as "ignoring due to level".  The aim here is to reduce the number of links which can sometimes be excessive ("the kitchen" exists in more than a dozen areas) but unfortunately as it stands it's a trade-off between having a sensible number of links and getting it right enough of the time.  There are ways to improve this, but they're more involved than simply comparing mob and area levels.  Of course, it only affects room cp's and only in certain level ranges.  In most room cp's it isn't a big problem.
+ - I adjusted the level filtering in room cp's again.  This is just something that can't be gotten perfect simply by using the game-defined area level limits.  For example, living wall is level 86, but it's in an area with a level max of 55, so it will show as "ignoring due to level".  The aim here is to reduce the number of links which can sometimes be excessive ("the kitchen" exists in more than a dozen areas) but for now it's a trade-off between having a sensible number of links and getting it right enough of the time.  In most room cp's it isn't a big problem, and there are few enough of these that I can probably do an area-specific filtering thing similar to that found in the keyword guesser.
  
- - Fixed a crash in the room cp target builder.
+ - On that topic, the "ignoring due to level" messages are in red so as to be more visible.
+ 
+ - Also regarding room cp's, fixed a crash in the cp target builder involving 'noquest' areas.
  
  - I tightened up a lot of the regexp regarding trigger matches, avoiding some accidental triggering and issues arising if the trigger fires on text that is somehow toxic to the plugin.  It seldom happened anyway, and in general was a random fluke when it did, mainly being possible when reading notes and in similar situations.  It should be very unlikely now.
+
+I'm a little nervous about this update due to the number of changes and won't be too surprised if there are error reports, but as usual just let me know about them and I'll fix them as soon as I can.  Thanks for all your ongoing support!
 
 # Search and Destroy v2.0.0 — 19 Aug 2018
 Good morning, it's time once again to turn the thermostat of awesome up a notch and so here we are.  Thanks to everyone for reporting issues with the beta and helping me find the root cause of those problems.  At this point the issues arising from the three-plugin system are basically gone.  Most of these came down to lots of duplicate (triplicate, really) code, issues with plugin broadcast and response, and issues when a change to one plugin breaks the others (which I must then fix).  The merge went a lot smoother than I expected and the number of problem reports dropped off fast as things were fixed.
