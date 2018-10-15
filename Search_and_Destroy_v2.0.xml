@@ -18,7 +18,8 @@
 ]]>
 </description>
 </plugin>
-	
+
+<!-- Isolinear intermatrix (utility module) -->
 <include name="constants.lua"/>
 <variables><variable name="example"></variable></variables>
 <timers>
@@ -813,71 +814,7 @@
 	end
 
 --	[[ Guess mob keywords]]
-	--[[function guess_mob_keywords(mobName)	--xxguess (easy 'find' text to make editing this easier)
-		local mob = string.lower(mobName)
-		local arid = currentRoom.arid	
-		local parts = split(mobName, "[^ ]+")
-		local comma = (string.find(parts[1], ",") or -1)	-- detect if we have a name like "WinkleWinkle, the coder"
-			
-		if ((#parts > 1) and (comma == #(parts[1]))) then	-- if the position of comma == the length of the first word, e.g. "Starling,"
-			mob = string.lower(string.gsub(parts[1], ",$", ""))	 -- remove the comma from the first word.
-		else		
-			local clean2 = {}
-			local cleanIndex = 1
-			for i,v in ipairs(parts) do	--clean parts
-				local clean = v
-				clean = string.gsub(clean, "^[Aa]$", "")
-				clean = string.gsub(clean, "^[Aa]n$", "")
-				clean = string.gsub(clean, "^[Tt]he$", "")
-				clean = string.gsub(clean, "^[Oo]f$", "")
-				clean = string.gsub(clean, "^[Ss]ome$", "")
-				
-				--if (currentRoom ~= nil) then	-- area specific cleans
-					if (currentRoom.arid == "bonds") then
-						clean = string.gsub(clean, "^[Dd]ragon$", "")
-					elseif (currentRoom.arid == "hatchling") then
-						clean = string.gsub(clean, "^[Ww]help$", "")
-						clean = string.gsub(clean, "^[Dd]ragon$", "")
-					elseif (currentRoom.arid == "sennarre") then
-						clean = string.gsub(clean, "^[Gg]ale's$", "")
-					elseif (currentRoom.arid == "sirens") then
-						clean = string.gsub(clean, "^[Mm]iss$", "")
-					elseif (currentRoom.arid == "spyreknow") then
-						clean = string.gsub(clean, "^[Ll]ittle black$", "")
-					elseif (currentRoom.arid == "verume") then
-						clean = string.gsub(clean, "^[Ll]izardman$", "")
-					elseif (currentRoom.arid == "wooble") then
-						clean = string.gsub(clean, "^[Ss]ea$", "")	
-					elseif (currentRoom.arid == "sohtwo") then
-						if (string.find(clean, "^[Ee]vil$") == 1 and #parts == 2) then
-							parts[2] = ""
-						end
-						if (string.find(clean, "^[Gg]ood$") == 1 and #parts == 2) then
-							parts[2] = ""
-						end
-					end
-				--end
-				clean = split(clean, "[a-zA-Z]+")
-				-- tprint(clean)
-				if (clean[1] ~= nil and clean[1] ~= "") then
-					clean2[cleanIndex] = clean[1]
-					cleanIndex = cleanIndex + 1
-				end
-			end
-			-- tprint(clean2)
-			if (#clean2 == 0) then			-- we over-guessed!  User entered "qw whelp" or something
-				mob = string.lower(mobName)
-			elseif (#clean2 == 1) then		-- improve variances in keywords by only using first few letters of mob name words
-				mob = string.lower(string.sub(clean2[1], 1, 8))
-			else
-				mob = string.lower(string.sub(clean2[1], 1, 4) .. " " .. string.sub(clean2[#clean2], 1, 4))
-			end
-		end
-		return mob
-	end ]]
-	
 	local gmkw_omit = {	["a"] = "",	["an"] = "", ["and"] = "", ["of"] = "", ["or"] = "", ["some"] = "", ["the"] = "" }
-
 	local gmkw_area_filters = {
 		["bonds"]		= { { f= "^(.*[bgry]%a+) dragon$",				g="%1" }, },
 		["citadel"]   	= {	{ f= "^([bgjlmsv]%a+) ([ap]r%a+[el]) .+$",	g="%1 %2" }, },	
@@ -886,10 +823,11 @@
 							{ f= "^(%a+ %a+) dragon whelp$", 			g="%1"},
 							{ f= "^(%a+) dragon (whelp)$", 				g="%1 %2" }, },
 		["sirens"] 		= {	{ f= "^miss ([%a']+)%s?(%a*).*%a$", 		g="%1 %2" }, },
+		["sohtwo"]		= { { f= "^(evil) %a+",							g="%1"},
+							{ f= "^(good) %a+",							g="%1"}, },
 		["verume"]		= {	{ f= "^lizardman (temple %a+)$", 			g="%1" }, },
 		["wooble"]		= {	{ f= "^sea (%a+)$", 						g="%1" },
-							{ f= "^sea (%a+ %a+)$", 					g="%1"}, },
-				}
+							{ f= "^sea (%a+ %a+)$", 					g="%1"}, },	}
 				
 	function gmkw(s, a)	-- guess mob keywords
 		if not s then return -1 end
@@ -1023,7 +961,6 @@
 				ColourNote("#FF5000", "", "\nSearch and Destroy: Not on quest - can request new quest immediately. \n")
 			end
 	end
-	
 	
 --	[[ "cp info" process path ]]
 	function cp_info_start()
@@ -3186,6 +3123,11 @@
 	<trigger match="^You have (?:(?:\d+ days?, )?\d+ hours? and )?\d+ minutes? left to finish this campaign\.$"
 		script="player_is_on_cp"
 		name="trg_player_is_on_cp" group="trg_campaign"
+		enabled="y" regexp="y" sequence="100" keep_evaluating="y" send_to="12" > </trigger>
+		
+	<trigger match="^You have (?:(?:\d+ hours?, )?\d+ minutes? and )?\d+ seconds? left to finish this campaign\.$"
+		script="player_is_on_cp"
+		name="trg_player_is_on_cp_2" group="trg_campaign"
 		enabled="y" regexp="y" sequence="100" keep_evaluating="y" send_to="12" > </trigger>
 		
 	<trigger match="^Congratulations, that was one of your CAMPAIGN mobs\!$"
