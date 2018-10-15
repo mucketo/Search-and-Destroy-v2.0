@@ -1,3 +1,28 @@
+# Search and Destroy v2.0 (rel-1.0.7) — 15 Oct 2018
+Good morning, this S&D update is mostly internal code changes, fixes, and things like that.  I'm too tired to think of anything witty to say at the moment, so here is what's different:
+
+ - I rewrote the mob keyword guessing process from scratch, due to issues with it that I couldn't resolve simply by editing the existing code.  The new version should handle certain problem areas better than the old.  Hatchling Aerie is probably the most obvious example; pretty much every mob in the zone has "dragon whelp" in its keywords, which means hunt trick could take a while.  This and similar situations should be a lot better now.  Note that it's not perfect and won't correctly guess all keywords (it was never supposed to) but as before it will get most of them right, and the new process means I can add filtering that I couldn't before.  Also, as a 'bonus' the mob keywords will randomly vary in length, from 4 to 5 characters for double keywords, and somewhat more so for single-keyword mobs.  I was bored.
+
+ - Mob keywords are now generated as part of the target list build process, rather than after the fact.  This makes it easier for script functions to access them.
+
+ - Quick where has also been rewritten.  It was overly complicated and had some long-standing issues.  Most of the complexity came from the fact that quick where can be called manually or by script, and the approach that was taken to deal with that.  It was too convoluted and difficult to follow, so I fixed that.  Also, the new version sort-of checks to see if the 'where' output is just flat-out wrong.  For example, if I want to look for "a villager" I probably don't want info for "a confused shopper" but they both have villager as a keyword.  If the output is obviously wrong it will try 2.villager and so forth.  It can still get the wrong mob (e.g. "a confused villager" or similar) but if totally wrong it should be able to skip it and try the next.
+
+ - Quick where will no longer guess mob keywords when called manually.
+
+ - The glitchiness with moving and resizing the GUI window should be mostly fixed.  I'm sure I missed something and it's still possible to bug it out, but for the most part it moves and handles like other plugins, and should no longer "jump" when you grab the title bar.
+ 
+ - There are improvements to the GUI window, mainly dealing with the cp level readout.  Red means you must level before taking a new cp, green means you can take a new cp at your current level, and blue means the plugin is installing or you are offline.  I also cleaned up a lot of its code in general and I think it works pretty well now.
+ 
+ - The process used to determine when you have arrived in the correct zone (area cp's) has been revamped and is faster.
+ 
+ - Improved output when doing 'xq' to target your quest mob.
+ 
+ - I adjusted the level filtering in room cp's again.  This is just something that can't be gotten perfect simply by using the game-defined area level limits.  For example, living wall is level 86, but it's in an area with a level max of 55, so it will show as "ignoring due to level".  The aim here is to reduce the number of links which can sometimes be excessive ("the kitchen" exists in more than a dozen areas) but unfortunately as it stands it's a trade-off between having a sensible number of links and getting it right enough of the time.  There are ways to improve this, but they're more involved than simply comparing mob and area levels.  Of course, it only affects room cp's and only in certain level ranges.  In most room cp's it isn't a big problem.
+ 
+ - Fixed a crash in the room cp target builder.
+ 
+ - I tightened up a lot of the regexp regarding trigger matches, avoiding some accidental triggering and issues arising if the trigger fires on text that is somehow toxic to the plugin.  It seldom happened anyway, and in general was a random fluke when it did, mainly being possible when reading notes and in similar situations.  It should be very unlikely now.
+
 # Search and Destroy v2.0.0 — 19 Aug 2018
 Good morning, it's time once again to turn the thermostat of awesome up a notch and so here we are.  Thanks to everyone for reporting issues with the beta and helping me find the root cause of those problems.  At this point the issues arising from the three-plugin system are basically gone.  Most of these came down to lots of duplicate (triplicate, really) code, issues with plugin broadcast and response, and issues when a change to one plugin breaks the others (which I must then fix).  The merge went a lot smoother than I expected and the number of problem reports dropped off fast as things were fixed.
 
