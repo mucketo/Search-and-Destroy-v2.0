@@ -1161,8 +1161,8 @@
 								type = ((v.is_dead == "no") and "room" or "area"),	-- deals with dead mobs when area contains roomnames same as area name e.g. Aardington Estate
 								ord = #t+1 } )
 						else	-- area containing roomname is outside level ranges
-							local link = string.format("Ignoring due to level : %s in '%s' (%s) [%s-%s]", v.mob, row.roomName, row.arid, min_lvl, max_lvl)
-							Hyperlink("xm move " .. row.roomid, link, "Move to room " .. row.roomid, "Khaki", "", 0)
+							local link = string.format(" **Ignoring due to level : %s in '%s' (%s) [%s-%s]", v.mob, row.roomName, row.arid, min_lvl, max_lvl)
+							Hyperlink("xm move " .. row.roomid, link, "Move to room " .. row.roomid, "#FF0000", "", 0)
 							print("")
 						end
 					end
