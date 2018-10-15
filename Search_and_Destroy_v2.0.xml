@@ -18,8 +18,7 @@
 ]]>
 </description>
 </plugin>
-
-<!-- Isolinear intermatrix (utility module) -->
+	
 <include name="constants.lua"/>
 <variables><variable name="example"></variable></variables>
 <timers>
@@ -814,7 +813,7 @@
 	end
 
 --	[[ Guess mob keywords]]
-	--[[function gmkw(mobName)	--xxguess (easy 'find' text to make editing this easier)
+	--[[function guess_mob_keywords(mobName)	--xxguess (easy 'find' text to make editing this easier)
 		local mob = string.lower(mobName)
 		local arid = currentRoom.arid	
 		local parts = split(mobName, "[^ ]+")
