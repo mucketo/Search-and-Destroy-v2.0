@@ -18,7 +18,7 @@
 ### "goto" command — run to room within area after getting search results
 - '**go**' runs to first room on the list returned by hunt trick / quick where.
 - '**go** \<*n*\>' runs to the *n*th room on the list.
-- '**go 0**' runs to the area start room (see 'xset mark')
+- '**go 0**' runs to the area start room (see 'xset mark').  This is useful for areas like Nenukon and similar maze, etc. situations where 'mapper goto' is unable to find a path.
 
 ### "ht" (hunt trick) command — leverage cp hunt mechanics to find target mob and location
 - '**ht**' runs the hunt trick (ingame: **'help hunt trick'**) on your currently-targeted cp mob.
@@ -57,4 +57,4 @@
 ### Xmapper commands
 - '**xm** \<**room name**\>' generates 'goto' links for matching rooms in the current area.
 - '**xm** \<**room name**\>**|**\<**area id**\>' generates 'goto' links for matching rooms in the given area id, e.g. 'xm along the sea floor|wooble'
-- '**xm** \<**room name**\>**|all**' generates 'goto' links for all matching rooms in your database.  Note, there is no limit on how many results it can return, other than the size of your db — as such it can easily spam your screen with hundreds or thousands of results if you let it.
+- '**xm** \<**room name**\>**|all**' generates 'goto' links for all matching rooms in your database.  Note, there is no limit on how many results it can return, other than the size of your db — it will spam your screen with hundreds or thousands of results if you let it.
