@@ -20,4 +20,4 @@ I'm writing this to make some things clear:
 
 - Gquest was the #1 requested feature, from new and old players alike.  Mob db/mastermind was #2.  There were many dozens of them.  Anyone with a private script has a leg up on everyone else who doesn't.  By providing a superior quality version to everyone, that playing field is levelled.
 
-If there are any questions feel free to email me at my gmail account (aardstar) and I will get back to you whenever I check the account.  Thanks for any remaining support.
+If there are any questions feel free to email me at my google mail account (aardstar) and I will get back to you whenever I check the account.  Thanks for any remaining support.
