@@ -6,7 +6,7 @@ Gquest-enabled S&D is nothing new, and various versions of it have been around f
 
 If Lasher's claim that a gquest-enabled S&D is a bot, then he needs to address Winklegold, as well as the multitude of private versions which are written for closed clans and the like.  I predict that he will not do this.  These versions have existed for years so it would be interesting to see what his explanation is for suddendly deciding that a GQ version (what about a mob DB version?) is "illegal".  
 
-To Lasher, frankly:  If gq S&D is "illegal" please start investigating current use cases and enforcing that rule, or else be shown to be totally full of it and generally not worth listening to.  I predict you will not do it.
+To Lasher, frankly:  If gq S&D is "illegal" please start investigating current use cases and enforcing that rule, or else be shown to be totally full of baloney and generally not worth listening to.  I predict you will not do it.
 
 So what happens with S&D now?
 
