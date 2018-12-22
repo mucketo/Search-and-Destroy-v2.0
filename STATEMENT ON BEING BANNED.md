@@ -1,12 +1,12 @@
 # Statement on being banned - 22 Dec 2018
 
-On Saturday, 15 Dec 2018, I was banned for threatening to release a gquest-enabled version of S&D.  If you are told any other reason for my being banned, that person is saying things that are untrue (either through misinformation, or outright lying).  I had had a problem with Lasher moments before ftalking "hey asshole, maybe I should add GQUEST to S&D."  Yes, I capitalized gquest.  That is the "threat" Lasher referenced in his Mudinfo note.
+On Saturday, 15 Dec 2018, I was banned for threatening to release a gquest-enabled version of S&D.  If you are told any other reason for my being banned, that person is saying things that are untrue (either through misinformation, or outright lying).  I had had a problem with Lasher moments before ftalking "hey asshole, maybe I should add GQUEST to S&D."  Yes, I capitalized gquest.  That is the "threat" Lasher referenced in his Mudinfo note.  Seconds later, I was banned.
 
-Gquest-enabled S&D is nothing new, and various versions of it have been around for years.  Pwar's "Winklegold" is publicly available, and includes GQ support and a mob database, and plenty of people use it.  I have to wonder why this version has never been a problem, in terms of legality.  I was banned for "threatening" to release a GQ-enabled version, but Pwar has been going along just fine after actually releasing one, and with a mob DB besides.  Many private versions (written for closed clans and the like, etc.) have also existed for years, probably for as long as S&D itself has existed.  So, for me to add one to this already large pool, how is that a problem *now*, of all times?  Does that sound right to you?
+Gquest-enabled S&D is nothing new, and various versions of it have been around for years.  Pwar's "Winklegold" is publicly available, and includes GQ support and a mob database, and plenty of people use it.  I have to wonder why this version has never been a problem, in terms of legality.  I was banned for "threatening" to release a GQ-enabled version, but Pwar has been going along just fine after actually releasing one, and with a mob DB besides.  Many private versions (written for closed clans and the like, etc.) have also existed for years, probably for as long as S&D itself has existed.  So, for me to add one to this already large pool, how is that a problem *now*, of all times?  And for what reason?  Does that sound right to you?
 
-If Lasher's claim that a gquest-enabled S&D is a bot, then he needs to address Winklegold, as well as the multitude of private versions.  I predict that he will not do this.  All of these have existed for years so it would be interesting to see what his explanation is for suddendly deciding that a GQ version released by me (what about a mob DB version?) is "illegal".  On what grounds?  Why now?  
+If Lasher's claim that a gquest-enabled S&D is a bot, then he needs to address Winklegold, as well as the multitude of private versions.  I predict that he will not do this.  All of these have existed for years so it would be interesting to see what the explanation is for suddendly deciding that a GQ version released by me (what about a mob DB version?) is "illegal".  On what grounds?  Why now?  
 
-To Lasher, frankly:  If gq S&D is "illegal" please start investigating such use cases and enforcing that rule, or else be shown to be totally full of baloney and generally not worth listening to.  I predict you will not do it.
+To Lasher, frankly:  If gq S&D is "illegal" please start investigating such use cases and enforcing that rule, or else be shown to be totally full of baloney and generally an unreliable information source.  I predict you will not do it.  Why bother?  It's never been a problem before.
 
 I'm writing this to make some things clear:
 
@@ -14,8 +14,10 @@ I'm writing this to make some things clear:
 
 - S&D is safe to run, and always will be.  The only data it accesses is your mapper DB and the plugin state files.  It does not — and never has, and never will — contain malicious code of any kind, does not log your commands or keystrokes, and/or do anything else nefarious.  All of S&D's code is available here on Github.  Feel free to inspect it at any time, as doing so will verify all of the above.  There are plenty of coders on Aardwolf who are better than I am, and none of them have raised any trust issues at all.
 
-- S&D will not kill mobs for you, on room entry or any other time.  It will not complete anything for you without manual, i.e. you being there, control.  This will never change, no exceptions.
+- S&D will not kill mobs for you, on room entry or any other time.  It will not complete anything for you without manual, i.e. you being there, control.  It will not auto-target the next mob on cp/gq kill.  This will never change, please don't ask.  
 
 - Lasher and company have forked my project and that's fine.  But you can rest assured that it will contain fewer features and do less.  It won't do GQ, for one thing, and certainly won't have a mob DB.  If you want the full package, this the place.  
+
+- Gquest was the #1 requested feature, from new and old players alike.  There were many dozens of them.  Isn't that important?  Looking past everything else, it's a problem when some players have gquest scripts and others don't.  Anyone with a private script has a leg up on everyone else who doesn't.  By providing a superior quality version to everyone, that playing field is levelled.
 
 If there are any questions feel free to email me at my gmail account (aardstar) and I will get back to you whenever I check the account.
