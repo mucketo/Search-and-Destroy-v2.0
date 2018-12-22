@@ -14,6 +14,8 @@ I'm writing this to make some things clear:
 
 - S&D is safe to run, and always will be.  The only data it accesses is your mapper DB and the plugin state files.  It does not — and never has, and never will — contain malicious code of any kind, does not log your commands or keystrokes, and/or do anything else nefarious.  All of S&D's code is available here on Github.  Feel free to inspect it at any time, as doing so will verify all of the above.  There are plenty of coders on Aardwolf who are better than I am, and none of them have raised any trust issues at all.
 
+- S&D will not kill mobs for you, on room entry or any other time.  It will not complete anything for you without manual, i.e. you being there, control.  This will never change, no exceptions.
+
 - Lasher and company have forked my project and that's fine.  But you can rest assured that it will contain fewer features and do less.  It won't do GQ, for one thing, and certainly won't have a mob DB.  If you want the full package, this the place.  
 
 If there are any questions feel free to email me at my gmail account (aardstar) and I will get back to you whenever I check the account.
