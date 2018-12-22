@@ -10,7 +10,7 @@ To Lasher, frankly:  If gq S&D is "illegal" please start investigating such use 
 
 I'm writing this to make some things clear:
 
-- Search and Destroy remains legal.  As downloaded from my Github, it is not considered a bot.  The only exception to this is if Lasher decides to enforce the no-qguest "rule" (that doesn't exist, and I believe won't). Users are still responsible for any modifications they make to the plugins (e.g. automation) and any consequences arising from that.  You do need to understand the botting rules if you want to use S&D.  If you plan on modifying your copy of S&D, please check with the immortals to confirm that the changes you're making are actually legal.
+- Search and Destroy remains legal.  As downloaded from my Github, it is not considered a bot.  The only exception to this is if Lasher decides to enforce the no-qguest "rule" (that doesn't exist, and I believe won't). Users are still responsible for any modifications they make to the plugins (e.g. automation) and any consequences arising from that.  You do need to understand the botting rules if you want to use S&D.  If you plan on modifying your copy of S&D, **please check with the immortals to confirm that the changes you're making are actually legal**.
 
 - S&D is safe to run, and always will be.  The only data it accesses is your mapper DB and the plugin state files.  It does not — and never has, and never will — contain malicious code of any kind, does not log your commands or keystrokes, and/or do anything else nefarious.  All of S&D's code is available here on Github.  Feel free to inspect it at any time, as doing so will verify all of the above.  There are plenty of coders on Aardwolf who are better than I am, and none of them have raised any trust issues at all.
 
