@@ -2,15 +2,15 @@
 
 On Saturday, 15 Dec 2018, I was banned for threatening to release a gquest-enabled version of S&D.  If you are told any other reason for my being banned, that person is saying things that are untrue (either through misinformation, or outright lying).  I had had a problem with Lasher moments before ftalking "hey asshole, maybe I should add GQUEST to S&D."  Yes, I capitalized gquest.  That is the "threat" Lasher referenced in his Mudinfo note.
 
-Gquest-enabled S&D is nothing new, and various versions of it have been around for years.  Pwar's "Winklegold" is publicly available, and includes GQ support and a mob database, and plenty of people use it.  I have to wonder why this version has never been a problem, in terms of legality.  I was banned for "threatening" to release a GQ-enabled version, but Pwar has been going along just fine after actually releasing one, and with a mob DB besides.  Does that sound right to you?
+Gquest-enabled S&D is nothing new, and various versions of it have been around for years.  Pwar's "Winklegold" is publicly available, and includes GQ support and a mob database, and plenty of people use it.  I have to wonder why this version has never been a problem, in terms of legality.  I was banned for "threatening" to release a GQ-enabled version, but Pwar has been going along just fine after actually releasing one, and with a mob DB besides.  Many private versions (written for closed clans and the like, etc.) have also existed for years, probably for as long as S&D itself has existed.  So, for me to add one to this already large pool, how is that a problem *now*, of all times?  Does that sound right to you?
 
-If Lasher's claim that a gquest-enabled S&D is a bot, then he needs to address Winklegold, as well as the multitude of private versions which are written for closed clans and the like.  I predict that he will not do this.  These versions have existed for years so it would be interesting to see what his explanation is for suddendly deciding that a GQ version (what about a mob DB version?) is "illegal".  
+If Lasher's claim that a gquest-enabled S&D is a bot, then he needs to address Winklegold, as well as the multitude of private versions.  I predict that he will not do this.  All of these have existed for years so it would be interesting to see what his explanation is for suddendly deciding that a GQ version released by me (what about a mob DB version?) is "illegal".  On what grounds?  Why now?  
 
-To Lasher, frankly:  If gq S&D is "illegal" please start investigating current use cases and enforcing that rule, or else be shown to be totally full of baloney and generally not worth listening to.  I predict you will not do it.
+To Lasher, frankly:  If gq S&D is "illegal" please start investigating such use cases and enforcing that rule, or else be shown to be totally full of baloney and generally not worth listening to.  I predict you will not do it.
 
 So what happens with S&D now?
 
-I keep developing it, that's what.  Somewhat less actively, I suppose, since testing will be harder.  I guess now I get to learn more about simulating MUD output on the client side, 
+I keep developing it, that's what.  Somewhat less actively, I suppose, since testing will be harder.  But the engines are still running, and we're going to keep it that way.  I guess now I get to learn more about simulating MUD output on the client side, which is probably useful and worthwhile.
 
 I'm writing this to make some things clear:
 
