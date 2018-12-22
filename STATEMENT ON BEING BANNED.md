@@ -18,6 +18,6 @@ I'm writing this to make some things clear:
 
 - Lasher and company have forked my project and that's fine.  But you can rest assured that it will contain fewer features and do less.  It won't do GQ, for one thing, and certainly won't have a mob DB.  If you want the full package, this the place.  
 
-- Gquest was the #1 requested feature, from new and old players alike.  There were many dozens of them.  Isn't that important?  Looking past everything else, it's a problem when some players have gquest scripts and others don't.  Anyone with a private script has a leg up on everyone else who doesn't.  By providing a superior quality version to everyone, that playing field is levelled.
+- Gquest was the #1 requested feature, from new and old players alike.  Mob db/mastermind was #2.  There were many dozens of them.  Isn't that important?  Looking past everything else, it's a problem when some players have gquest scripts and others don't.  Anyone with a private script has a leg up on everyone else who doesn't.  By providing a superior quality version to everyone, that playing field is levelled.
 
 If there are any questions feel free to email me at my gmail account (aardstar) and I will get back to you whenever I check the account.
