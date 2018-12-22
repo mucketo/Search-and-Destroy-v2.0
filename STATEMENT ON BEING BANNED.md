@@ -8,10 +8,6 @@ If Lasher's claim that a gquest-enabled S&D is a bot, then he needs to address W
 
 To Lasher, frankly:  If gq S&D is "illegal" please start investigating such use cases and enforcing that rule, or else be shown to be totally full of baloney and generally not worth listening to.  I predict you will not do it.
 
-So what happens with S&D now?
-
-I keep developing it, that's what.  Somewhat less actively, I suppose, since testing will be harder.  But the engines are still running, and we're going to keep it that way.  I guess now I get to learn more about simulating MUD output on the client side, which is probably useful and worthwhile.
-
 I'm writing this to make some things clear:
 
 - Search and Destroy remains legal.  As downloaded from my Github, it is not considered a bot.  The only exception to this is if Lasher decides to enforce the no-qguest "rule" (that doesn't exist, and I believe won't). Users are still responsible for any modifications they make to the plugins (e.g. automation) and any consequences arising from that.  You do need to understand the botting rules if you want to use S&D.  If you plan on modifying your copy of S&D, please check with the immortals to confirm that the changes you're making are actually legal.
@@ -20,5 +16,4 @@ I'm writing this to make some things clear:
 
 - Lasher and company have forked my project and that's fine.  But you can rest assured that it will contain fewer features and do less.  It won't do GQ, for one thing, and certainly won't have a mob DB.  If you want the full package, this the place.  
 
-If there are any questions feel free to email me at my gmail account (aardstar) and I will get back to you whenever I check the account.  I sincerely regret any inconvenience that my being banned has caused, but rest assured it is no bar to continuing active work on S&D.  I hope this clears some things up, in view of some of what has been said.
-
+If there are any questions feel free to email me at my gmail account (aardstar) and I will get back to you whenever I check the account.
