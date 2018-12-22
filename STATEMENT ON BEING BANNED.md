@@ -1,6 +1,6 @@
 # Statement on being banned - 22 Dec 2018
 
-On Saturday, 12 Dec 2018, I was banned for threatening to release a gquest-enabled version of S&D.  If you are told any other reason for my being banned, that person is saying things that are untrue (either through misinformation, or outright lying).  I had had a problem with Lasher moments before ftalking "hey asshole, maybe I should add GQUEST to S&D."  Yes, I capitalized gquest.  That is the "threat" Lasher referenced in his Mudinfo note.
+On Saturday, 15 Dec 2018, I was banned for threatening to release a gquest-enabled version of S&D.  If you are told any other reason for my being banned, that person is saying things that are untrue (either through misinformation, or outright lying).  I had had a problem with Lasher moments before ftalking "hey asshole, maybe I should add GQUEST to S&D."  Yes, I capitalized gquest.  That is the "threat" Lasher referenced in his Mudinfo note.
 
 Gquest-enabled S&D is nothing new, and various versions of it have been around for years.  Pwar's "Winklegold" is publicly available, and includes GQ support and a mob database, and plenty of people use it.  I have to wonder why this version has never been a problem, in terms of legality.  I was banned for "threatening" to release a GQ-enabled version, but Pwar has been going along just fine after actually releasing one, and with a mob DB besides.  Does that sound right to you?
 
