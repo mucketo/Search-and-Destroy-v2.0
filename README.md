@@ -1,3 +1,27 @@
+# Search and Destroy v2.0 (rel-1.0.9) — 24 Dec 2018
+Here is the update Lasher banned me for.  Don't feel bad, he's out of line and has never had a rational conversation about S&D with me, ever.  Every single one was either threatening to remove hunt trick, or this, or that; or else just angry whinging over how S&D is ruining the mud.  I guess tiers went out of style.  
+
+Regardless!  The #1 requested feature is finally in:
+
+ - S&D now does Gquest.  The only real issue is kind of silly and that is simply that I never did GQ that often.  So it may yet be a bit rough and be missing some trigger patterns, but unless something is horribly broken, it should do GQ just fine in most cases.  All it really needed was the relevant triggers and some minor retooling of the target builder and whatnot.
+ 
+ - If anyone downloaded rel-1.0.8, it was just a draft and should be updated.  Fixed the bug with window links not showing.
+ 
+Other changes:
+
+ - Updated the noexp indicator in the GUI window, apparently it was "weird" before but should look better now.  If noexp is on, the arrow will be red with a double red crossbar at top.  If noexp is off the arrow will be grey with a single green crossbar at top.
+ 
+ - I gave the cp level indicator and noexp cutoff readout a sort-of "relief" or "depth" effect similar to how the numbers in MMORPG's look.  I think it looks ok, and is an interesting concept in plugin graphical design.
+ 
+It's a short list but the gquest change is pretty major.  Honestly, this is nothing new.  Pwar's Winklegold does GQ and is publicly available, and there are many (dozens, even) of private S&D gq mods.  They're mostly minimum-investment mods of the original triple pack.  Winklegold is better, but still based on 3 plugins.  By wiping all of these out and providing a superior platform, the playing field here is levelled.
+
+I don't buy that gquest S&D is illegal or a bot.  Fundamentally, it does nothing it didn't do before.  The only change is that it responds and handles a few additional trigger patterns, i.e. those relevant to gquest.  For whatever reason, the multitude of previous gquest mods attracted minimal attention, but when I bring it out, I get singled out and banned.  It's not really consistent, for one thing.  For another, it's not in touch with reality:  The amount of positive feedback I've received from players greatly exceeds the negative, even including Lasher himself complaining at me.  I'm absolutely convinced it has helped Aardwolf to retain players who would otherwise have quit — I've had players tell me exactly that.  
+
+To fly off the handle and ban the contributor who put hundreds of hours into furthering player retention, to say I threatened to release a bot version (I didn't), and to suddenly paint GQ-mod S&D as illegal when it has been legal for 10 years, illustrates how irrational and unhinged Lasher truly is at a most basic level.  If he wonders why I never donated any money, that's exactly why.
+
+Enjoy the update, ninjas.  If there are any problems, email my google mail (aardstar) and I'll fix things as soon as I can.  
+
+
 # Search and Destroy v2.0 (rel-1.0.7) — 15 Oct 2018
 Good morning, this S&D update is mostly internal code changes, fixes, and things like that.  I'm too tired to think of anything witty to say at the moment, so here is what's different:
 
