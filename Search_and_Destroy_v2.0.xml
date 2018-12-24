@@ -2386,8 +2386,8 @@
 		["cplevel"] = { f="Consolas",			 s=11, 				b=false, 	i=false, 	u=false },
 		["noexp"]	= { f="Consolas",			 s=11, 				b=false, 	i=false, 	u=false }, --noexp tnl
 		["noexp2"]	= { f="Consolas",			 s= 9, 				b=false, 	i=false, 	u=false },
-		["targ_ar"] = { f="Lucida Sans Unicode", s=win_font_size, 	b=false, 	i=false, 	u=false },
-		["targ_rm"] = { f="Segoe", 				 s=win_font_size, 	b=false, 	i=false, 	u=false } }
+		["cplist_area"] = { f="Lucida Sans Unicode", s=win_font_size, 	b=false, 	i=false, 	u=false },
+		["cplist_room"] = { f="Segoe", 				 s=win_font_size, 	b=false, 	i=false, 	u=false } }
 		
 	function create_win()
 		if (win_init == false) then
