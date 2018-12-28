@@ -23,3 +23,9 @@ I'm writing this to make some things clear:
 - Gquest was the #1 requested feature, from new and old players alike.  Mob db/mastermind was #2.  There were many dozens of them.  Anyone with a private script has a leg up on everyone else who doesn't.  By providing a superior quality version to everyone, that playing field is levelled.
 
 If there are any questions feel free to email me at my google mail account (aardstar) and I will get back to you whenever I check the account.  Thanks for any remaining support.
+
+Btw, Lasher apparently considers the following to be constructive feedback:
+
+15 Dec 14:44:20 - Lasher tells you 'the only direct talk I have is that you are a cancer on this game it would be better without. For a decade I tried to convince myself that could change. I'm done.'
+
+Nice.  Thanks for the encouraging message.  Way to set a positive example by throwing stones in your glass house.
