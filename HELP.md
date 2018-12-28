@@ -43,10 +43,17 @@
 - Note that "qw" searches only one target, unlike hunt trick (whose input looks similar).  Use "xwhere" to 'where' multiple mobname instances.
 - "qw" will fail if the mob is flagged no-where, or in a dark room.  It works intermittently on hidden mobs due to your detect roll vs hidden.
 
+### Gquest:
+- Gquest handling is automatic and will take over when you join a gq.
+- For the most part, the commands are the same as when you are doing a cp.
+- '**gg**' is an alias for 'gq check'.
+- To reload campaign targets while on a gquest, do 'cp ch'.
+- To reload your gquest targets, do 'gq ch'.
+
 ### Automatic noexp toggle:
 - '**xset noexp** \<*n*\>' turns automatic noexp on and sets the TNL cutoff to *n*, for n > 0.
 - '**xset noexp 0**' turns auto-noexp off.
-- '**xset noexp off** also turns auto-noexp off.
+- '**xset noexp off**' also turns auto-noexp off.
 - If auto-noexp is on, it will turn noexp on when you can take a new cp at your current level and your TNL drops below the cutoff.
 - Likewise, noexp is toggled off when your TNL is above the cutoff, or when you must level before taking a new cp.
 - When you take a new cp, auto-noexp turns noexp off and allows you to level up and continue gaining xp until TNL drops below the cutoff.  This makes cp-levelling more time efficient - most of your levelling xp will be gained while doing your cp.
