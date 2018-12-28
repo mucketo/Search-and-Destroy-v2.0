@@ -22,9 +22,9 @@ I'm writing this to make some things clear:
 
 - Lasher and company have ~~stolen~~ forked my project and that's fine.  But you can rest assured their "official" version will contain fewer features and do less than mine.  Theirs might get bug fixes if they can find someone willing to work on it.  If you want the full package, real McCoy with updates, this the place.  
 
-- Gquest was the #1 user-requested feature, from new and old players alike.  Mob db/mastermind was #2.  There were dozens of requests for them.  Anyone with a private gq or db script has a leg up on everyone else who doesn't.  Providing a superior quality version helps to level that playing field.  
+- Gquest was the #1 user-requested feature, from new and old players alike.  Mob db/mastermind was #2.  There were dozens of requests for them.  Anyone with a private gq or db script has a leg up on everyone else who doesn't.  Providing superior quality version and having it publicly available helps to level that playing field.  
 
-If there are any questions feel free to email me at my google mail account (aardstar) and I will get back to you whenever I check the account.  Thanks for any remaining support.
+If you have any questions about this situation, or if you encounter a problem or bug while using S&D, feel free to email me at my google mail account (aardstar) and I will get back to you whenever I check the account.  Thanks for any remaining support.
 
 Btw, Lasher apparently considers the following to be constructive feedback as well:
 
