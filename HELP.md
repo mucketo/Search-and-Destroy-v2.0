@@ -27,7 +27,7 @@
 - '**ht abort**', '**hta**', and '**ht0**' all cancel a hunt trick in progress without returning any results.
 - Hunt trick does *not* require you to practice (or even have) the hunt skill.  If you don't actually have the skill, hunt will return random directions and also give the "unable to hunt" message for cp/gq mobs.
 
-### "kk" (quick kill) command:
+### "kk" (quick kill) command
 - '**kk**' tries to kill the current target
 - '**xset kk** \<**command**\>' sets quick-kill to attack with the given skill or spell, e.g. , 'xset kk bs', 'xset kk c 541'
 
@@ -42,6 +42,16 @@
 - '**qw** \<*n*.**mobname**\>' gets results for *n*.mobname (e.g. 3.fido).
 - Note that "qw" searches only one target, unlike hunt trick (whose input looks similar).  Use "xwhere" to 'where' multiple mobname instances.
 - "qw" will fail if the mob is flagged no-where, or in a dark room.  It works intermittently on hidden mobs due to your detect roll vs hidden.
+
+### Automatic noexp toggle:
+- '**xset noexp** \<*n*\>' turns automatic noexp on and sets the TNL cutoff to *n*, for n > 0.
+- '**xset noexp 0**' turns auto-noexp off.
+- '**xset noexp off** also turns auto-noexp off.
+- If auto-noexp is on, it will turn noexp on when you can take a new cp at your current level and your TNL drops below the cutoff.
+- Likewise, noexp is toggled off when your TNL is above the cutoff, or when you must level before taking a new cp.
+- When you take a new cp, auto-noexp turns noexp off and allows you to level up and continue gaining xp until TNL drops below the cutoff.  This makes cp-levelling more time efficient - most of your levelling xp will be gained while doing your cp.
+- To prevent over-levelling and missing a cp, set your TNL cutoff high enough such that massive xp gain (from doubles, etc.) won't exceed current TNL and cause you to level up.  A cutoff of 1000 is usually reliable, 1500 almost never fails, and 2000 never fails.
+- Missed cp's due to over-levelling represents an opportunity cost that is significant, but easy to overlook.  Using auto-noexp maximizes your QP gains by
 
 ### Vidblain navigation
 - '**xset vidblain**' turns on Vidblain navigation, which allows one to quickly and easily cross the dark portal into Vidblain.  It also compensates for the portal's reality-distortion and uncertain transit vector and landing room, enabling straightforward travel to Vidblain destinations which would otherwise be tedious at best.
