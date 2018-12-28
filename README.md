@@ -1,5 +1,5 @@
 # Search and Destroy v2.0 (rel-1.0.9) — 24 Dec 2018
-Here is the update Lasher banned me for.  Don't feel bad, he's out of line and has never had a rational conversation about S&D with me, ever.  Every single one was either threatening to remove hunt trick, or this, or that; or else just angry whinging over how S&D is ruining the mud.  I guess tiers went out of style.  
+Here is the update Lasher banned me for.  Don't feel bad, he's out of line and has never had a rational conversation about S&D with me, ever.  Every single one was either threatening to remove hunt trick, or threatening me, or else just angrily whinging that S&D is ruining the mud.  I guess tiers went out of style.  
 
 Regardless!  The #1 requested feature is finally in:
 
