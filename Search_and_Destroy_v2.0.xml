@@ -41,7 +41,7 @@
 	require "serialize"
 	require "tprint"
 	require "wait"
-	local current_sd_version = "Search & Destroy v2.0 (rel-1.0.9)"
+	local current_sd_version = "Search & Destroy v2.0 (rel-1.0.10)"
 	local plugin_id_gmcp_handler = "3e7dedbe37e44942dd46d264"		-- easier to remember the var names than the plugin id's
 	local plugin_id_gmcp_mapper = "b6eae87ccedd84f510b74714"
 	local plugin_id_z_order = "462b665ecb569efbf261422f"
@@ -71,6 +71,7 @@
 	local cp_check_list = {}
 	local last_cp_check = os.clock()
 	local cp_target_list = {}
+	
 -- [[cp status, etc. ]]	
 	local cpstatus_can_get_new_cp = "no"
 	local player_on_cp = "no"
@@ -904,7 +905,38 @@
 		end											-- somehow or doing one of the other mickey mouse nonsense things that Lua likes to do.
 		return guess
 	end
+
+--	[[ Mob database / mastermind process ]]
+	local get_mobsub_sql =  
+		"SELECT * " ..
+		"FROM mobsubs " ..
+		"WHERE mobname like %s AND areaid = %s "		
+
+	local mobsub_cache = {}
 	
+	function get_mobsub(mob, arid)
+		--TODO - cache the result of a found hit in a table
+--		local key = 
+		local db = sqlite3.open(GetInfo(66) .. "WinkleWinkle_MobSubs.db")
+		local select = string.format (get_mobsub_sql, fixsql(mob), fixsql(arid))
+		for row in db:nrows(select) do
+			--DebugNote("substitute name: " .. row.subname)
+			local row_mobsub = {
+				mob = row.mobname,
+				arid = row.areaid,
+				sub = row.subname,
+				noHunt = row.nohunt,
+				noWhere = row.nowhere,
+				noScan = row.noscan,
+				rmid = row.roomid,
+				comment = row.comment }
+			db:close_vm()
+			return row_mobsub
+		end
+		db:close_vm()
+		return nil
+	end	
+
 --	[[ Quest target process ]]
 	function xquest_1()
 		local qs = quest_target.qstat
@@ -984,6 +1016,7 @@
 				ColourNote("#FF5000", "", "\nSearch and Destroy: Not on quest - can request new quest immediately. \n")
 			end
 	end
+	
 --	[[ general cp status process / functions ]]
 	function player_start_new_cp()	-- called by line "good luck on your campaign" when starting new cp
 		player_on_cp = "yes"
@@ -2313,7 +2346,7 @@
 		for row in db:nrows(sql) do
 			index = index + 1
 			print("----------- record " .. index .. " -----------" )
-			tprint(row)
+			--tprint(row)
 	--		print (serialize.save ("row", row))
 		end
 		db:close_vm()
@@ -2502,7 +2535,9 @@
 	
 	function draw_cplevel(left, top)
 		local width, height = 36, 36
-		local level, cp_type, get_new = cp_info_level, cp_info_type, cpstatus_can_get_new_cp
+		local level = cp_info_level
+		local cp_type = cp_info_type
+		local get_new = cpstatus_can_get_new_cp
 		local cx1,cy1 = left, top
 		local cx2,cy2 =  (left + width), (top+height)
 		local bgcolor = 0x000000
@@ -2641,6 +2676,7 @@
 		draw_window_cp()
 		draw_resize_tag()
 		win_display_target_links(cp_target_list)
+		--tprint(cp_target_list)
 		Redraw()
 	end
 	
@@ -2650,13 +2686,18 @@
 		end
 		itemHotspots = {}
 	end
-	function win_display_target_links(list)
+	
+	function win_display_target_links(t)
+		--tprint(list)
+		local list = t
 		clear_hotspots()
 		if (win_state == "min") then
 			return
 		end
 		local index = 0
 		for i,v in ipairs (list) do
+			--print(i)
+			--tprint(v)
 			index = i
 			if (index * win_line_space + win_target_list_top) > (win_height - 5) then break end		-- Abort loop if printed item would not be visible.
 			local mob = v.mob .. ((v.is_dead == "yes") and " [Dead]" or "")
@@ -2702,13 +2743,14 @@
 			end
 			itemHotspots[#itemHotspots+1] = index
 			WindowAddHotspot(win, index,
-							hsLeft, hsTop + win_target_list_top, hsLength, hsHeight, -- rectangle
+							hsLeft, hsTop + targ_list_top, hsLength, hsHeight, -- rectangle
 							"", "", "", "",-- "mouseover", "cancelmouseover", "mousedown", "cancelmousedown"
 							eventHandler, 
 							"",  -- tooltip text
 							miniwin.cursor_arrow, 0)
 		end
 	end
+	
 	local lastRefresh = 0
 	function ResizeMoveCallback()
 		local screen_width = GetInfo(281) - 100
@@ -2743,6 +2785,7 @@
 			lastRefresh = t
 		end
 	end
+	
 	function ResizeReleaseCallback()
 		win_state = "max"
 		w = win_width
@@ -2753,6 +2796,7 @@
 		WindowDragHandler(win, "hsDrag1", "dragmove", "dragrelease", 0)
 		xgui_RefreshWindow()
 	end
+	
 	function mousedown_resize_window(flags, hotspot_id)
 	   if (hotspot_id == "hsResize") then
 		  startx, starty = WindowInfo (win, 17), WindowInfo (win, 18)
@@ -3080,9 +3124,7 @@
 		return s:match'^()%s*$' and '' or s:match'^%s*(.*%S)'
 	end
 	
-	
-	
-	
+--	[[ Gquest ]]	
 	function do_gq_info()
 		local id = current_gq_id or ""
 		gq_info_list = {}
@@ -3170,6 +3212,7 @@
 			v.kw = gmkw(v.mob)
 		end
 		build_cp_target_list(t)
+		xcp_retry_stat = 0
 	end
 	
 --	[[ Build gq target list process path ]]
@@ -3217,6 +3260,7 @@
 		short_mob_name = -1
 		full_mob_name = -1
 		xcp_retry_stat = 1
+		xcp_index = 0
 		xgq_index = 0
 		gotoIndex = 1
 		gotoList = {}
@@ -3625,14 +3669,24 @@
 	<alias	match="^xcp mode(?: (?<option>ht|qw|off))?$"
 			script="xcp_set_mode"
 			enabled="y" regexp="y" sequence="100" ignore_case="y" > </alias>
-<!-- gquest: info, check -->
+			
+<!-- gquest commands -->
 	<alias	match="^gq (?:i|info)$"
 			script="do_gq_info"
 			enabled="y" regexp="y" sequence="100" ignore_case="y" send_to="12" > </alias>
 					
 	<alias	match="^gq ch|gq check|gg$"
 			script="do_gq_check"
-			enabled="y" regexp="y" sequence="100" ignore_case="y" send_to="12" > </alias>			
+			enabled="y" regexp="y" sequence="100" ignore_case="y" send_to="12" > </alias>
+	
+	<alias	match="^xgq$"
+			script="xcp_noarg"
+			enabled="y" regexp="y" sequence="100" ignore_case="y" > </alias>
+			
+	<alias	match="^xgq (?<index>[0-9]+)$"
+			script="xcp_arg"
+			enabled="y" regexp="y" sequence="100" ignore_case="y" > </alias>
+					
 <!-- movement: xrunto, go, nx, etc.  -->
 	<alias	match="^(?:xrt|xrun|xrunto) (?<loc>.+)$"
 			script="xrun_to"
