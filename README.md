@@ -1,5 +1,7 @@
 # Search and Destroy v2.0 (rel-1.0.9) — 24 Dec 2018
- - S&D now supports gquest.  All you have to do is join a gq, then after it starts do 'gq info' to get targets and detect type. You can be on a gq and cp at the same time - just do 'cp check' or 'gq check' to change between target lists, then handle them using 'xcp' and so on.  The implementation isn't based on Pwar's or any other—it's an entirely new design.
+ - S&D now supports gquest.  All you have to do is join a gq, then after it starts do 'gq info' to get targets and detect type. You can be on a gq and cp at the same time - 'cp check' and 'gq check' will change between cp and gq mob lists.  Xcp, go, and so on are used for both.  The implementation is a new design and isn't based on prior gq S&D or other scripts.
+
+If there are any problems, email them to me.  
 
 Other changes:
 
@@ -8,6 +10,8 @@ Other changes:
  - I gave the cp level indicator and noexp cutoff readout a sort-of "relief" or "depth" effect similar to how the numbers in MMORPG's look.  I think it looks ok, and is an interesting concept in plugin graphical design.
  
 The change list is short, but gquest support is significant for being the #1 most-requested feature.  I got more requests for gquest than all other feature requests combined, from old and new players alike, and from all walks of Aard life.  A mob database was #2, a distant second.
+
+Lastly, "gq hist" shows a lot of no-winner gquests, even in the 200+ bracket.  Go win some of them.
 
 # Search and Destroy v2.0 (rel-1.0.7) — 15 Oct 2018
 Good morning, this S&D update is mostly internal code changes, fixes, and things like that.  I'm too tired to think of anything witty to say at the moment, so here's what's new:
