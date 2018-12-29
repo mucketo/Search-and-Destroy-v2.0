@@ -1,33 +1,20 @@
 # Search and Destroy v2.0 (rel-1.0.9) — 24 Dec 2018
-Here is the update Lasher banned me for.  Don't feel bad, he's out of line and has never had a rational conversation about S&D with me, ever.  Every single one was either threatening to remove hunt trick, or threatening me, or else just angrily whinging that S&D is ruining the mud.  I guess tiers went out of style.  
+ - S&D now supports gquest.  All you have to do is join a gq, then after it starts do 'gq info' to get targets and detect type. You can be on a gq and cp at the same time - just do 'cp check' or 'gq check' to change between target lists, then handle them using 'xcp' and so on.  The implementation isn't based on Pwar's or any other—it's an entirely new design.
 
-Regardless!  The #1 requested feature is finally in:
-
- - S&D now does Gquest.  The only real issue is kind of silly and that is simply that I never did GQ that often.  So it may yet be a bit rough and be missing some trigger patterns, but unless something is horribly broken, it should do GQ just fine in most cases.  All it really needed was the relevant triggers and some minor retooling of the target builder and whatnot.
- 
- - If anyone downloaded rel-1.0.8, it was just a draft and should be updated.  Fixed the bug with window links not showing.
- 
 Other changes:
 
  - Updated the noexp indicator in the GUI window, apparently it was "weird" before but should look better now.  If noexp is on, the arrow will be red with a double red crossbar at top.  If noexp is off the arrow will be grey with a single green crossbar at top.
  
  - I gave the cp level indicator and noexp cutoff readout a sort-of "relief" or "depth" effect similar to how the numbers in MMORPG's look.  I think it looks ok, and is an interesting concept in plugin graphical design.
  
-It's a short list but the gquest change is pretty major.  Honestly, this is nothing new.  Pwar's Winklegold does GQ and is publicly available, and there are many (dozens, even) of private S&D gq mods.  They're mostly minimum-investment mods of the original triple pack.  Winklegold is better, but still based on 3 plugins.  By wiping all of these out and providing a superior platform, the playing field here is levelled.
-
-I don't buy that gquest S&D is illegal or a bot.  Fundamentally, it does nothing it didn't do before.  The only change is that it responds and handles a few additional trigger patterns, i.e. those relevant to gquest.  For whatever reason, the multitude of previous gquest mods attracted minimal attention, but when I bring it out, I get singled out and banned.  It's inconsistent, for one thing.  For another, it's out of touch with reality:  The amount of positive feedback I've received from players greatly exceeds the negative, even including Lasher himself complaining at me.  I'm absolutely convinced S&D has helped Aardwolf to retain players who would otherwise have quit — I've had players tell me exactly that.  
-
-To fly off the handle and ban the contributor who put hundreds of hours into furthering player retention, to say I threatened to release a bot version (I didn't), and to suddenly paint GQ-mod S&D as illegal when it has been legal for 10 years, illustrates how irrational and unhinged the administration truly is at a very basic level.  If anyone wonders why I never donated any money, that would be why.
-
-Enjoy the update, ninjas.  If there are any problems, email my google mail (aardstar) and I'll fix things as soon as I can.  
-
+The change list is short, but gquest support is significant for being the #1 most-requested feature.  I got more requests for gquest than all other feature requests combined, from old and new players alike, and from all walks of Aard life.  A mob database was #2, a distant second.
 
 # Search and Destroy v2.0 (rel-1.0.7) — 15 Oct 2018
-Good morning, this S&D update is mostly internal code changes, fixes, and things like that.  I'm too tired to think of anything witty to say at the moment, so here is what's different:
+Good morning, this S&D update is mostly internal code changes, fixes, and things like that.  I'm too tired to think of anything witty to say at the moment, so here's what's new:
 
- - I rewrote the mob keyword guessing process from scratch, due to issues with it that I couldn't resolve simply by editing the existing code.  The new version should handle certain problem areas better than the old.  Hatchling Aerie is probably the most obvious example; pretty much every mob in the zone has "dragon whelp" in its keywords, which means hunt trick could take a while.  This and similar situations should be a lot better now.  Note that it's not perfect and won't correctly guess all keywords (it was never supposed to) but as before it will get most of them right, and the new process means I can add filtering that I couldn't before.  Also, as a 'bonus' the mob keywords will randomly vary in length, from 4 to 5 characters for double keywords, and somewhat more so for single-keyword mobs.  I was bored.
+ - I rewrote the mob keyword guessing process from scratch due to intractable problems with the original.  The new version can filter things like 'dragon whelp' in Hatchling Aerie.  That and similar situations should be a lot better now.  It's still possible to guess wrong, but the improved filtering makes it less likely.  As a 'bonus' the mob keywords will randomly vary in length, from 4 to 5 characters for double keywords, and somewhat more so for single-keyword mobs.  I was bored.
 
- - Mob keywords, mob link color, and similar things are determined during the cp target list build process, rather than after the fact.  This makes it easier for script functions to access them, and makes things like displaying the links faster.
+ - Mob keywords, mob link color, and similar are now determined earlier in the process that starts with cp check and ends with  nicely displayed target info.  Previously, it was done during the process that builds and displays the text links in the main window.  Moving it to the target list builder's database loop makes it easier to maintain and the altered timing seems to reduce display lag a bit.
 
  - Quick where has also been rewritten.  It was overly complicated and had some long-standing issues.  Most of the complexity came from the fact that quick where can be called manually or by script, and the approach that was taken to deal with that.  It was too convoluted and difficult to follow, so I fixed that.  Also, the new version sort-of checks to see if the 'where' output is just flat-out wrong.  For example, if I want to look for "a villager" I probably don't want info for "a confused shopper" but they both have villager as a keyword.  If the output is obviously wrong it will try 2.villager and so forth.  It can still get the wrong mob (e.g. "a confused villager" or similar) but if totally wrong it should be able to skip it and try the next.
 
