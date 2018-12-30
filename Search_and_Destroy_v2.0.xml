@@ -1022,7 +1022,6 @@
 			set_noexp("off")
 		end
 		Send_GMCP_Packet("request room")
-		--xg_draw_window()
 		do_cp_info()
 	end
 	
@@ -1068,9 +1067,10 @@
 	
 --	[[ "cp info" process path ]]
 	function do_cp_info()
-		main_target_list = {}
-		currentRoom = gmcp("room.info")
 		cp_info_list = {}
+		main_target_list = {}
+		xcp_index = 0
+		currentRoom = gmcp("room.info")
 		EnableTrigger("trg_cp_info_level_taken", true)
 		EnableTrigger("trg_cp_info_targets", true)
 		SendNoEcho("cp info")
@@ -3086,6 +3086,8 @@
 	function do_gq_info()
 		gq_info_list = {}
 		main_target_list = {}
+		xcp_index = 0
+		currentRoom = gmcp("room.info")
 		EnableTrigger("trg_gq_info_quest_name", true)
 		Send("gq info " .. current_gq_id)
 		xg_draw_window()
@@ -3265,7 +3267,7 @@
 		xg_draw_window()
 		if (player_on_cp == "yes") then
 			ColourNote("#FF5000", "#000000", "Reloading your cp targets....")
-			do_cp_check()
+			do_cp_info()
 		end
 	end
 
@@ -3626,7 +3628,7 @@
 			script="do_gq_info"
 			enabled="y" regexp="y" sequence="100" ignore_case="y" send_to="12" > </alias>
 					
-	<alias	match="^gq (?:c|ch|check)|gg|qq$"
+	<alias	match="^(?:gq (?:c|ch|check)|gg|qq)$"
 			script="do_gq_check"
 			enabled="y" regexp="y" sequence="100" ignore_case="y" send_to="12" > </alias>
 
