@@ -2472,6 +2472,7 @@
 		end
 		draw_circle_readout()		-- add circle text/level readout
 		draw_noexp_cutoff(213, 22)	-- add noexp cutoff indicator
+		draw_resize_tag()
 		Redraw()
 	end
 
